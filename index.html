@@ -414,6 +414,7 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <button onclick="refreshAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer">🔄</button>
+        <button onclick="clearAllData()" style="background:rgba(220,38,38,.7);border:none;color:#fff;padding:7px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer">🗑️ ลบทั้งหมด</button>
         <button onclick="adminOut()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer">ออก</button>
       </div>
     </div>
@@ -424,11 +425,27 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
     <button class="tab-btn" onclick="aTab('zone',this)">แยกเขต</button>
     <button class="tab-btn" onclick="aTab('questions',this)">วิเคราะห์ข้อ</button>
     <button class="tab-btn" onclick="aTab('persons',this)">รายคน</button>
+    <button class="tab-btn" onclick="aTab('config',this)">⚙️ ตั้งค่า</button>
   </div>
   <div id="at-overview"></div>
   <div id="at-zone" style="display:none"></div>
   <div id="at-questions" style="display:none"></div>
   <div id="at-persons" style="display:none"></div>
+  <div id="at-config" style="display:none">
+    <div class="card" style="margin-top:12px">
+      <div class="card-t">⚙️ ตั้งค่าช่วงเวลาสอบ</div>
+      <div class="fg">
+        <label class="fl">วัน-เวลาเริ่มสอบ</label>
+        <input class="fc" id="cfg-start" type="datetime-local">
+      </div>
+      <div class="fg">
+        <label class="fl">วัน-เวลาปิดสอบ</label>
+        <input class="fc" id="cfg-end" type="datetime-local">
+      </div>
+      <button class="btn btn-orange" onclick="saveExamConfig()">💾 บันทึกการตั้งค่า</button>
+    </div>
+    <div id="cfg-current" style="padding:0 16px 20px"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1023,18 +1040,32 @@ async function postGAS(result){
   try{
     await fetch(CFG.GAS_URL,{
       method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'data='+encodeURIComponent(JSON.stringify(result))
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify(result)
     });
   }catch(e){console.warn('GAS post:',e);}
 }
 
-async function fetchGAS(){
+async function fetchGAS(action='list'){
   if(!CFG.GAS_URL) return null;
   try{
-    const r=await fetch(CFG.GAS_URL+'?action=list',{redirect:'follow'});
+    const r=await fetch(CFG.GAS_URL+'?action='+action,{redirect:'follow'});
     return await r.json();
   }catch(e){console.warn('GAS fetch:',e);return null;}
+}
+
+async function clearAllData(){
+  if(!confirm('⚠️ ลบประวัติทั้งหมดใช่มั๊ย?\n\nข้อมูลผู้สอบ สิทธิ์สาขา และ progress ทั้งหมดจะถูกลบถาวร')) return;
+  // Clear localStorage
+  ['moto24_exam_jun69','moto24_done_jun69','moto24_review_jun69','moto24_exam_progress'].forEach(k=>{
+    try{localStorage.removeItem(k);}catch(e){}
+  });
+  // Clear GAS sheet
+  if(CFG.GAS_URL){
+    try{await fetchGAS('clear');}catch(e){}
+  }
+  toast('🗑️ ลบประวัติทั้งหมดแล้ว');
+  await renderAdmin();
 }
 
 // ════════════════════════════════════════════
@@ -1214,9 +1245,91 @@ function renderPersons(R, zone){
 function aTab(tab, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  ['at-overview','at-zone','at-questions','at-persons'].forEach(id=>{
+  ['at-overview','at-zone','at-questions','at-persons','at-config'].forEach(id=>{
     document.getElementById(id).style.display=id===`at-${tab}`?'block':'none';
   });
+  if(tab==='config') renderConfigTab();
+}
+
+// ════════════════════════════════════════════
+//  EXAM CONFIG (Admin)
+// ════════════════════════════════════════════
+function dtLocalStr(d){
+  // returns "YYYY-MM-DDTHH:MM" for datetime-local input
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function renderConfigTab(){
+  const start=document.getElementById('cfg-start');
+  const end=document.getElementById('cfg-end');
+  if(start && !start.value) start.value=dtLocalStr(CFG.EXAM_START);
+  if(end && !end.value) end.value=dtLocalStr(CFG.EXAM_END);
+  renderConfigStatus();
+}
+
+function renderConfigStatus(){
+  const el=document.getElementById('cfg-current');
+  if(!el) return;
+  const fmt=d=>`${d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})} เวลา ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})} น.`;
+  el.innerHTML=`<div class="info-banner" style="margin-top:0">
+    <b>📅 ช่วงเวลาสอบปัจจุบัน</b><br>
+    เปิด: ${fmt(CFG.EXAM_START)}<br>
+    ปิด: ${fmt(CFG.EXAM_END)}
+  </div>`;
+}
+
+async function saveExamConfig(){
+  const startVal=document.getElementById('cfg-start').value;
+  const endVal=document.getElementById('cfg-end').value;
+  if(!startVal||!endVal){toast('⚠️ กรุณากรอกวันที่และเวลาให้ครบ');return;}
+  const start=new Date(startVal), end=new Date(endVal);
+  if(isNaN(start)||isNaN(end)){toast('⚠️ รูปแบบวันที่ไม่ถูกต้อง');return;}
+  if(end<=start){toast('⚠️ เวลาปิดต้องมากกว่าเวลาเปิด');return;}
+
+  CFG.EXAM_START=start;
+  CFG.EXAM_END=end;
+  const cfg={start:start.toISOString(), end:end.toISOString()};
+  try{localStorage.setItem('moto24_config',JSON.stringify(cfg));}catch(e){}
+
+  if(CFG.GAS_URL){
+    try{
+      await fetch(CFG.GAS_URL,{
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'setConfig',...cfg})
+      });
+    }catch(e){console.warn('GAS config save:',e);}
+  }
+
+  toast('✅ บันทึกช่วงเวลาสอบแล้ว');
+  renderConfigStatus();
+}
+
+async function loadExamConfig(){
+  // 1) localStorage (fast, offline fallback)
+  try{
+    const c=JSON.parse(localStorage.getItem('moto24_config')||'null');
+    if(c && c.start && c.end){
+      const s=new Date(c.start), e=new Date(c.end);
+      if(!isNaN(s)&&!isNaN(e)){CFG.EXAM_START=s; CFG.EXAM_END=e;}
+    }
+  }catch(ex){}
+
+  // 2) GAS (authoritative, overrides localStorage)
+  if(CFG.GAS_URL){
+    try{
+      const r=await fetch(CFG.GAS_URL+'?action=config',{redirect:'follow'});
+      const c=await r.json();
+      if(c && c.start && c.end){
+        const s=new Date(c.start), e=new Date(c.end);
+        if(!isNaN(s)&&!isNaN(e)){
+          CFG.EXAM_START=s; CFG.EXAM_END=e;
+          try{localStorage.setItem('moto24_config',JSON.stringify(c));}catch(ex){}
+        }
+      }
+    }catch(ex){console.warn('GAS config load:',ex);}
+  }
 }
 
 // ════════════════════════════════════════════
@@ -1374,7 +1487,7 @@ function emptyState(t,s){return `<div class="empty"><div class="empty-i">📭</d
 // ════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════
-initSplash();
+loadExamConfig().then(()=>initSplash());
 </script>
 
 <!--
@@ -1391,11 +1504,29 @@ initSplash();
 
 ─── APPS SCRIPT CODE ───────────────────────────────────
 
+var CONFIG_KEY = 'exam_config';
+
 function doPost(e) {
   try {
-    var raw = e.parameter.data || (e.postData && e.postData.contents) || '{}';
-    var data = JSON.parse(decodeURIComponent(raw));
+    var raw = e.postData && e.postData.contents ? e.postData.contents : '{}';
+    var data = JSON.parse(raw);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    // ─── setConfig action ───────────────────────────────────
+    if (data.action === 'setConfig') {
+      var props = PropertiesService.getScriptProperties();
+      props.setProperty(CONFIG_KEY, JSON.stringify({start:data.start, end:data.end}));
+      return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ─── clearAll action ────────────────────────────────────
+    if (data.action === 'clear') {
+      var s = ss.getSheetByName('Results');
+      if (s) { s.clearContents(); s.appendRow(['Timestamp','Name','Zone','Branch','Score','Total','Pct','Pass','Date','CatStats','WrongQIDs']); }
+      return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ─── save result (default) ──────────────────────────────
     var sheet = ss.getSheetByName('Results');
     if (!sheet) {
       sheet = ss.insertSheet('Results');
@@ -1419,7 +1550,24 @@ function doPost(e) {
 
 function doGet(e) {
   try {
+    var action = (e.parameter && e.parameter.action) || 'list';
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    // ─── get exam config ────────────────────────────────────
+    if (action === 'config') {
+      var props = PropertiesService.getScriptProperties();
+      var c = props.getProperty(CONFIG_KEY);
+      return ContentService.createTextOutput(c || 'null').setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ─── clear (GET fallback) ───────────────────────────────
+    if (action === 'clear') {
+      var s = ss.getSheetByName('Results');
+      if (s) { s.clearContents(); s.appendRow(['Timestamp','Name','Zone','Branch','Score','Total','Pct','Pass','Date','CatStats','WrongQIDs']); }
+      return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ─── list results ───────────────────────────────────────
     var sheet = ss.getSheetByName('Results');
     if (!sheet || sheet.getLastRow() <= 1) return ContentService.createTextOutput('[]').setMimeType(ContentService.MimeType.JSON);
     var rows = sheet.getDataRange().getValues();
