@@ -1056,15 +1056,31 @@ async function fetchGAS(action='list'){
 
 async function clearAllData(){
   if(!confirm('⚠️ ลบประวัติทั้งหมดใช่มั๊ย?\n\nข้อมูลผู้สอบ สิทธิ์สาขา และ progress ทั้งหมดจะถูกลบถาวร')) return;
-  // Clear localStorage
+  // Clear localStorage on this device
   ['moto24_exam_jun69','moto24_done_jun69','moto24_review_jun69','moto24_exam_progress'].forEach(k=>{
     try{localStorage.removeItem(k);}catch(e){}
   });
-  // Clear GAS sheet
+  // Save clearedAt in config so ALL branch devices auto-unlock on next load
+  const clearedAt=Date.now();
+  try{
+    const cfg=JSON.parse(localStorage.getItem('moto24_config')||'{}');
+    cfg.clearedAt=clearedAt;
+    localStorage.setItem('moto24_config',JSON.stringify(cfg));
+  }catch(e){}
   if(CFG.GAS_URL){
     try{await fetchGAS('clear');}catch(e){}
+    try{
+      await fetch(CFG.GAS_URL,{
+        method:'POST',mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'setConfig',
+          start:CFG.EXAM_START.toISOString(),
+          end:CFG.EXAM_END.toISOString(),
+          clearedAt})
+      });
+    }catch(e){}
   }
-  toast('🗑️ ลบประวัติทั้งหมดแล้ว');
+  toast('🗑️ ลบประวัติทั้งหมดแล้ว — สาขาสามารถทำข้อสอบใหม่ได้แล้ว');
   await renderAdmin();
 }
 
@@ -1289,8 +1305,12 @@ async function saveExamConfig(){
 
   CFG.EXAM_START=start;
   CFG.EXAM_END=end;
-  const cfg={start:start.toISOString(), end:end.toISOString()};
-  try{localStorage.setItem('moto24_config',JSON.stringify(cfg));}catch(e){}
+  const newFields={start:start.toISOString(), end:end.toISOString()};
+  try{
+    const existing=JSON.parse(localStorage.getItem('moto24_config')||'{}');
+    localStorage.setItem('moto24_config',JSON.stringify({...existing,...newFields}));
+  }catch(e){}
+  const cfg=newFields;
 
   if(CFG.GAS_URL){
     try{
@@ -1307,28 +1327,45 @@ async function saveExamConfig(){
 }
 
 async function loadExamConfig(){
+  let cfg=null;
+
   // 1) localStorage (fast, offline fallback)
   try{
-    const c=JSON.parse(localStorage.getItem('moto24_config')||'null');
-    if(c && c.start && c.end){
-      const s=new Date(c.start), e=new Date(c.end);
+    cfg=JSON.parse(localStorage.getItem('moto24_config')||'null');
+    if(cfg && cfg.start && cfg.end){
+      const s=new Date(cfg.start), e=new Date(cfg.end);
       if(!isNaN(s)&&!isNaN(e)){CFG.EXAM_START=s; CFG.EXAM_END=e;}
     }
-  }catch(ex){}
+  }catch(ex){cfg=null;}
 
   // 2) GAS (authoritative, overrides localStorage)
   if(CFG.GAS_URL){
     try{
       const r=await fetch(CFG.GAS_URL+'?action=config',{redirect:'follow'});
-      const c=await r.json();
-      if(c && c.start && c.end){
-        const s=new Date(c.start), e=new Date(c.end);
+      const gasCfg=await r.json();
+      if(gasCfg && gasCfg.start && gasCfg.end){
+        const s=new Date(gasCfg.start), e=new Date(gasCfg.end);
         if(!isNaN(s)&&!isNaN(e)){
-          CFG.EXAM_START=s; CFG.EXAM_END=e;
-          try{localStorage.setItem('moto24_config',JSON.stringify(c));}catch(ex){}
+          CFG.EXAM_START=s; CFG.EXAM_END=e; cfg=gasCfg;
+          try{localStorage.setItem('moto24_config',JSON.stringify(gasCfg));}catch(ex){}
         }
       }
     }catch(ex){console.warn('GAS config load:',ex);}
+  }
+
+  // 3) Auto-unlock branches if admin cleared (clearedAt)
+  if(cfg && cfg.clearedAt){
+    try{
+      const done=JSON.parse(localStorage.getItem('moto24_done_jun69')||'{}');
+      let changed=false;
+      Object.keys(done).forEach(k=>{
+        if((done[k].ts||0)<cfg.clearedAt){delete done[k];changed=true;}
+      });
+      if(changed){
+        localStorage.setItem('moto24_done_jun69',JSON.stringify(done));
+        try{localStorage.removeItem('moto24_exam_progress');}catch(e){}
+      }
+    }catch(ex){}
   }
 }
 
@@ -1515,7 +1552,12 @@ function doPost(e) {
     // ─── setConfig action ───────────────────────────────────
     if (data.action === 'setConfig') {
       var props = PropertiesService.getScriptProperties();
-      props.setProperty(CONFIG_KEY, JSON.stringify({start:data.start, end:data.end}));
+      var existing = {};
+      try { existing = JSON.parse(props.getProperty(CONFIG_KEY) || '{}'); } catch(e2) {}
+      if (data.start) existing.start = data.start;
+      if (data.end) existing.end = data.end;
+      if (data.clearedAt) existing.clearedAt = data.clearedAt;
+      props.setProperty(CONFIG_KEY, JSON.stringify(existing));
       return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
     }
 
