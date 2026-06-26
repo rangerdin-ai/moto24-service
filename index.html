@@ -312,15 +312,16 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
     </div>
     <div class="fg">
       <label class="fl">สาขา (ที่รับผิดชอบ)</label>
-      <select class="fc" id="l-branch" disabled>
+      <select class="fc" id="l-branch" disabled onchange="fillName()">
         <option value="">-- เลือกสาขา --</option>
       </select>
     </div>
-    <div class="fg">
+    <div class="fg" id="name-wrap">
       <label class="fl">ชื่อ-นามสกุล</label>
       <input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">
     </div>
-    <button class="btn btn-orange" onclick="startExam()" style="margin-top:4px">เริ่มทำข้อสอบ →</button>
+    <div id="branch-done-notice" style="display:none;margin-bottom:10px"></div>
+    <button class="btn btn-orange" id="btn-start" onclick="startExam()" style="margin-top:4px">เริ่มทำข้อสอบ →</button>
     <div style="text-align:center;margin-top:12px">
       <button onclick="go('splash')" style="background:none;border:none;color:var(--g500);font-family:inherit;font-size:13px;cursor:pointer">← ย้อนกลับ</button>
     </div>
@@ -451,6 +452,41 @@ const BRANCHES = {
   'เขต 1':['02-ระโนด1 / 29-ระโนด24','03-สิงหนคร / 30-สิงหนคร24','04-สทิงพระ / 27-สทิงพระ24','05-ระโนด2','06-บ่อล้อ / 15-บ่อล้อ24','07-หัวไทร / 18-หัวไทร24','11-ปากพนัง / 26-ปากพนัง24','35-ควนหิน / 36-ควนหิน24','37-บ้านด่าน24'],
   'เขต 2':['08-ชะอวด / 23-ชะอวด24','09-ร่อนพิบูลย์ / 14-ร่อนพิบูลย์24','10-หัวถนน / 33-หัวถนน24','12-ลานสกา','13-ท่าศาลา / 31-ท่าศาลา24','17-จันดี','34-แยกคูขวาง','38-ทุ่งใหญ่ / 16-ทุ่งใหญ่24','24-นบพิตำ24','25-พิปูน24'],
   'เขต 3':['19-สตูล24','20-ฉลุง24','21-ท่าแพ24','22-ละงู24','28-ควนกาหลง24','32-รัตภูมิ24']
+};
+
+// ════════════════════════════════════════════
+//  ชื่อช่างประจำสาขา — เพิ่มชื่อตรงนี้
+//  รูปแบบ: 'ชื่อสาขา': ['ชื่อช่าง 1', 'ชื่อช่าง 2', ...]
+// ════════════════════════════════════════════
+const TECHS = {
+  // เขต 1
+  '02-ระโนด1 / 29-ระโนด24': ['ณัฐนนท์ เพ็ชรคง'],
+  '03-สิงหนคร / 30-สิงหนคร24': ['ศุภวุฒิ จันทวงศ์'],
+  '04-สทิงพระ / 27-สทิงพระ24': ['ยศกฤษณ์ มรรคโช'],
+  '05-ระโนด2': ['สุธาเนตร แทนบุญ'],
+  '06-บ่อล้อ / 15-บ่อล้อ24': ['ณัฐวุฒิ ชูชม'],
+  '07-หัวไทร / 18-หัวไทร24': ['วรุฒน์ ร่าเสน'],
+  '11-ปากพนัง / 26-ปากพนัง24': ['สิริพงศ์ อินทระ'],
+  '35-ควนหิน / 36-ควนหิน24': ['ปวิตร แก้วมณี'],
+  '37-บ้านด่าน24': ['ภวนนท์ คุรุประดิษฐ'],
+  // เขต 2
+  '08-ชะอวด / 23-ชะอวด24': ['พีรพัท เบญจวงค์นุพงศ์'],
+  '09-ร่อนพิบูลย์ / 14-ร่อนพิบูลย์24': ['มงคล พิบูลย์'],
+  '10-หัวถนน / 33-หัวถนน24': ['พศวรรต เก้าซ้วน'],
+  '12-ลานสกา': ['ณรงค์ฤทธิ์ แก้วขาวผ่อง'],
+  '13-ท่าศาลา / 31-ท่าศาลา24': ['จิรภัทร แก้วหินกอง'],
+  '17-จันดี': [],
+  '34-แยกคูขวาง': ['ณัฐวุฒิ วิเชียรศรี'],
+  '38-ทุ่งใหญ่ / 16-ทุ่งใหญ่24': ['บริพัฒน์ มวยดี'],
+  '24-นบพิตำ24': ['ปฏิพล มากพริ้ม'],
+  '25-พิปูน24': ['ทวีศักดิ์ หนูเพชร'],
+  // เขต 3
+  '19-สตูล24': ['ณัฐวีย์ ใบกาเด็น'],
+  '20-ฉลุง24': ['อัรกอม หลงจิ'],
+  '21-ท่าแพ24': ['อาซาน ยันติง'],
+  '22-ละงู24': ['อดิสรณ์ แสมตะฝา'],
+  '28-ควนกาหลง24': ['อิสมาแอล หมาดทิ้ง'],
+  '32-รัตภูมิ24': ['สุชาติ แก้วศรี']
 };
 
 const CAT_COLOR = {
@@ -585,6 +621,13 @@ function fillBranch(){
     sel.disabled=false;
   } else sel.disabled=true;
 
+  // Reset name field and notice when zone changes
+  document.getElementById('name-wrap').innerHTML=`<label class="fl">ชื่อ-นามสกุล</label><input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">`;
+  const notice=document.getElementById('branch-done-notice');
+  notice.style.display='none';
+  const btn=document.getElementById('btn-start');
+  if(btn) btn.disabled=false;
+
   // Show exam time info
   const now=new Date();
   const info=document.getElementById('exam-time-info');
@@ -594,6 +637,40 @@ function fillBranch(){
     info.textContent=`⏱ เหลือเวลาสอบอีก ${h > 0 ? h+'ชม. ':''} ${m} นาที | ปิดสอบ ${pad(CFG.EXAM_END.getHours())}:${pad(CFG.EXAM_END.getMinutes())} น.`;
     info.style.display='block';
   } else info.style.display='none';
+}
+
+function fillName(){
+  const branch=document.getElementById('l-branch').value;
+  const zone=document.getElementById('l-zone').value;
+  const wrap=document.getElementById('name-wrap');
+  const notice=document.getElementById('branch-done-notice');
+  const btn=document.getElementById('btn-start');
+
+  if(!branch){
+    wrap.innerHTML=`<label class="fl">ชื่อ-นามสกุล</label><input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">`;
+    notice.style.display='none';
+    if(btn) btn.disabled=false;
+    return;
+  }
+
+  // Check if already submitted
+  const done=loadDone(zone,branch);
+  if(done){
+    notice.innerHTML=`<div class="warn-banner" style="margin:0">⛔ <b>สาขานี้ส่งข้อสอบแล้ว</b><br>${done.name} · คะแนน ${done.score}/35 คะแนน</div>`;
+    notice.style.display='block';
+    if(btn) btn.disabled=true;
+  } else {
+    notice.style.display='none';
+    if(btn) btn.disabled=false;
+  }
+
+  // Populate name field
+  const techs=(TECHS[branch]||[]).filter(t=>t);
+  if(techs.length>0){
+    wrap.innerHTML=`<label class="fl">เลือกชื่อช่าง</label><select class="fc" id="l-name"><option value="">-- เลือกชื่อ --</option>${techs.map(n=>`<option>${n}</option>`).join('')}</select>`;
+  } else {
+    wrap.innerHTML=`<label class="fl">ชื่อ-นามสกุล</label><input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">`;
+  }
 }
 
 function startExam(){
@@ -607,6 +684,10 @@ function startExam(){
   const now=new Date();
   if(now<CFG.EXAM_START){toast('ยังไม่ถึงเวลาสอบครับ');return;}
   if(now>CFG.EXAM_END){toast('หมดเวลาสอบแล้วครับ');return;}
+
+  // Block if branch already submitted
+  const done=loadDone(zone,branch);
+  if(done){toast('⛔ สาขานี้ส่งข้อสอบแล้วครับ ('+done.name+')');return;}
 
   // Check for saved in-progress exam for this person
   const saved=loadProgress(name,zone,branch);
@@ -771,6 +852,7 @@ function doSubmit(){
 
   const result={name:S.name,zone:S.zone,branch:S.branch,score,total:35,pct,pass,catStats,wrongQIDs,date,ts:Date.now()};
   saveLocal(result);
+  saveDone(S.zone,S.branch,S.name,score);
   postGAS(result);
   // Save review data (shuffled order + answers) for self-review after exam
   saveReview({name:S.name,zone:S.zone,branch:S.branch,score,total:35,pct,pass,
@@ -842,6 +924,21 @@ function loadLocal(){try{return JSON.parse(localStorage.getItem('moto24_exam_jun
 // Review data (per-device, one person per device)
 function saveReview(d){try{localStorage.setItem('moto24_review_jun69',JSON.stringify(d));}catch(e){}}
 function loadReview(){try{return JSON.parse(localStorage.getItem('moto24_review_jun69')||'null');}catch{return null;}}
+
+// Submitted branches — 1 submission per branch lock
+function saveDone(zone,branch,name,score){
+  try{
+    const all=JSON.parse(localStorage.getItem('moto24_done_jun69')||'{}');
+    all[zone+'|'+branch]={name,score,ts:Date.now()};
+    localStorage.setItem('moto24_done_jun69',JSON.stringify(all));
+  }catch(e){}
+}
+function loadDone(zone,branch){
+  try{
+    const all=JSON.parse(localStorage.getItem('moto24_done_jun69')||'{}');
+    return all[zone+'|'+branch]||null;
+  }catch{return null;}
+}
 
 // In-progress exam state (for resuming after accidental exit)
 function saveProgress(){
