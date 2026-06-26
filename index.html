@@ -57,9 +57,6 @@ html,body{min-height:100%;font-family:'Sarabun',-apple-system,sans-serif;font-si
 .card{background:#fff;border-radius:var(--r);padding:20px;margin:12px 16px;box-shadow:var(--shadow)}
 .card-t{font-size:14px;font-weight:800;color:var(--g700);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--g100)}
 
-/* HERO BANNER */
-.login-hero{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dk) 100%);padding:28px 20px;text-align:center}
-
 /* FORM */
 .fg{margin-bottom:14px}
 .fl{font-size:13px;font-weight:700;color:var(--g700);display:block;margin-bottom:6px}
@@ -294,12 +291,14 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 
 <!-- ═══ LOGIN ═══ -->
 <div id="screen-login" class="screen">
-  <div class="login-hero">
-    <div class="logo-wrap" style="transform:scale(.75);transform-origin:center">
-      <div class="logo-main"><span class="logo-th">โมโต</span><span class="logo-num">24</span></div>
-      <div class="logo-sub">บริษัท โมโต24 จำกัด</div>
+  <div class="hd">
+    <div class="hd-row">
+      <div>
+        <div class="hd-title">📋 ข้อมูลผู้เข้าสอบ</div>
+        <div class="hd-sub">ข้อสอบช่างบริการ มิถุนายน 2569 · 35 ข้อ</div>
+      </div>
+      <button onclick="go('splash')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">← หลัก</button>
     </div>
-    <div style="color:#fff;font-size:13px;opacity:.8;margin-top:14px">กรุณากรอกข้อมูลก่อนเริ่มสอบ</div>
   </div>
   <div class="card">
     <div class="card-t">ข้อมูลผู้เข้าสอบ</div>
@@ -605,6 +604,22 @@ function startExam(){
   if(now<CFG.EXAM_START){toast('ยังไม่ถึงเวลาสอบครับ');return;}
   if(now>CFG.EXAM_END){toast('หมดเวลาสอบแล้วครับ');return;}
 
+  // Check for saved in-progress exam for this person
+  const saved=loadProgress(name,zone,branch);
+  if(saved && saved.shuffledIDs && saved.shuffledIDs.length===35){
+    const qMap=Object.fromEntries(Q.map(q=>[q.id,q]));
+    const restored=saved.shuffledIDs.map(id=>qMap[id]).filter(Boolean);
+    if(restored.length===35){
+      S={name,zone,branch,shuffled:restored,cur:saved.cur||0,ans:saved.answers||new Array(35).fill(-1),timerID:null,submitted:false};
+      go('exam');
+      document.getElementById('ex-name').textContent=name+' | '+branch;
+      renderQ();
+      startTimer();
+      setTimeout(()=>toast('↩️ กลับมาทำต่อ จากข้อที่ '+(S.cur+1)),400);
+      return;
+    }
+  }
+
   S={name,zone,branch,shuffled:shuffle([...Q]),cur:0,ans:new Array(35).fill(-1),timerID:null,submitted:false};
   go('exam');
   document.getElementById('ex-name').textContent=name+' | '+branch;
@@ -629,6 +644,7 @@ function renderNav(){
 function goQ(i){
   if(i<0||i>=S.shuffled.length) return;
   S.cur=i;
+  saveProgress();
   renderQ();
   window.scrollTo(0,0);
 }
@@ -683,6 +699,7 @@ function pick(i){
   document.getElementById('prog').style.width=`${(answered/tot)*100}%`;
   const nb=document.getElementById('btn-next-nav');
   if(nb) nb.textContent='ข้อถัดไป →';
+  saveProgress();
 }
 
 function trySubmit(){
@@ -730,6 +747,7 @@ function startTimer(){
 function doSubmit(){
   if(S.submitted) return;
   S.submitted=true;
+  clearProgress();
   if(S.timerID) clearInterval(S.timerID);
 
   let score=0;
@@ -820,6 +838,29 @@ function loadLocal(){try{return JSON.parse(localStorage.getItem('moto24_exam_jun
 // Review data (per-device, one person per device)
 function saveReview(d){try{localStorage.setItem('moto24_review_jun69',JSON.stringify(d));}catch(e){}}
 function loadReview(){try{return JSON.parse(localStorage.getItem('moto24_review_jun69')||'null');}catch{return null;}}
+
+// In-progress exam state (for resuming after accidental exit)
+function saveProgress(){
+  if(!S||!S.shuffled||!S.shuffled.length) return;
+  try{
+    localStorage.setItem('moto24_exam_progress',JSON.stringify({
+      name:S.name, zone:S.zone, branch:S.branch,
+      shuffledIDs:S.shuffled.map(q=>q.id),
+      answers:[...S.ans], cur:S.cur
+    }));
+  }catch(e){}
+}
+function loadProgress(name,zone,branch){
+  try{
+    const d=JSON.parse(localStorage.getItem('moto24_exam_progress')||'null');
+    if(!d) return null;
+    if(d.name===name && d.zone===zone && d.branch===branch) return d;
+  }catch(e){}
+  return null;
+}
+function clearProgress(){
+  try{localStorage.removeItem('moto24_exam_progress');}catch(e){}
+}
 
 // ════════════════════════════════════════════
 //  REVIEW FUNCTIONS
