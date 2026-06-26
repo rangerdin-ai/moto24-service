@@ -666,7 +666,11 @@ function fillName(){
 
   // Populate name field
   const techs=(TECHS[branch]||[]).filter(t=>t);
-  if(techs.length>0){
+  if(techs.length===1){
+    // Single tech — auto-fill, read-only
+    wrap.innerHTML=`<label class="fl">ชื่อช่างประจำสาขา</label><input class="fc" id="l-name" type="text" value="${techs[0]}" readonly style="background:var(--g100);color:var(--g700);cursor:default">`;
+  } else if(techs.length>1){
+    // Multiple techs — show dropdown
     wrap.innerHTML=`<label class="fl">เลือกชื่อช่าง</label><select class="fc" id="l-name"><option value="">-- เลือกชื่อ --</option>${techs.map(n=>`<option>${n}</option>`).join('')}</select>`;
   } else {
     wrap.innerHTML=`<label class="fl">ชื่อ-นามสกุล</label><input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">`;
