@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>ข้อสอบช่างบริการ โมโต24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;800;900&family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --blue:#1A3B9E;--blue-dk:#0f2568;--blue-lt:#EEF2FF;
+  --orange:#E8631A;--orange-dk:#c24f10;--orange-lt:#FFF3ED;
+  --green:#16A34A;--green-lt:#DCFCE7;
+  --red:#DC2626;--red-lt:#FEE2E2;
+  --yellow:#F59E0B;--yellow-lt:#FEF3C7;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;
+  --g400:#94A3B8;--g500:#64748B;--g700:#334155;--g900:#0F172A;
+  --shadow:0 2px 14px rgba(26,59,158,.13);--r:14px;
+}
+html,body{min-height:100%;font-family:'Sarabun',-apple-system,sans-serif;font-size:16px;line-height:1.5;background:var(--g50);color:var(--g900)}
+
+/* LOGO */
+.screen{display:none;min-height:100vh;max-width:480px;margin:0 auto}
+.screen.active{display:block}
+
+.logo-wrap{background:var(--blue);border-radius:16px;padding:18px 28px 14px;display:inline-block;text-align:center;box-shadow:0 6px 24px rgba(26,59,158,.4)}
+.logo-main{font-family:'Kanit',sans-serif;font-size:52px;font-weight:900;line-height:1;letter-spacing:-1px}
+.logo-th{color:#fff}.logo-num{color:var(--orange)}
+.logo-sub{color:rgba(255,255,255,.85);font-family:'Kanit',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;margin-top:8px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.logo-sub::before,.logo-sub::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.35);min-width:8px}
+
+/* SPLASH */
+#screen-splash{background:linear-gradient(160deg,var(--blue-dk) 0%,var(--blue) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 30px;color:#fff;min-height:100vh}
+.splash-title{font-size:20px;font-weight:700;margin-top:22px;opacity:.95}
+.splash-sub{font-size:13px;opacity:.75;margin-top:6px;margin-bottom:32px}
+.countdown-box{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);border-radius:16px;padding:20px 28px;margin-bottom:24px;min-width:240px}
+.countdown-label{font-size:12px;opacity:.7;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.countdown-time{font-size:42px;font-weight:900;letter-spacing:4px;font-variant-numeric:tabular-nums}
+.countdown-date{font-size:13px;opacity:.75;margin-top:6px}
+.status-badge{padding:10px 24px;border-radius:99px;font-size:14px;font-weight:700;display:inline-block;margin-bottom:24px}
+.status-open{background:var(--green);color:#fff}
+.status-closed{background:var(--red);color:#fff}
+.status-soon{background:var(--yellow);color:var(--g900)}
+.btn-splash{background:var(--orange);color:#fff;border:none;border-radius:12px;padding:16px 40px;font-size:18px;font-weight:800;font-family:inherit;cursor:pointer;width:100%;max-width:280px;box-shadow:0 4px 20px rgba(232,99,26,.45);transition:all .18s}
+.btn-splash:active{background:var(--orange-dk);transform:scale(.97)}
+.btn-admin{background:rgba(255,255,255,.12);color:#fff;border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px 32px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;max-width:280px;margin-top:12px}
+
+/* HEADER */
+.hd{background:var(--blue);color:#fff;padding:14px 18px;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(15,37,104,.4)}
+.hd-title{font-size:17px;font-weight:800}
+.hd-sub{font-size:11px;opacity:.8;margin-top:1px}
+.hd-row{display:flex;justify-content:space-between;align-items:center}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);padding:20px;margin:12px 16px;box-shadow:var(--shadow)}
+.card-t{font-size:14px;font-weight:800;color:var(--g700);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--g100)}
+
+/* HERO BANNER */
+.login-hero{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dk) 100%);padding:28px 20px;text-align:center}
+
+/* FORM */
+.fg{margin-bottom:14px}
+.fl{font-size:13px;font-weight:700;color:var(--g700);display:block;margin-bottom:6px}
+.fc{width:100%;padding:13px 14px;border:2px solid var(--g200);border-radius:10px;font-size:16px;font-family:inherit;color:var(--g900);background:#fff;-webkit-appearance:none;appearance:none;transition:border .15s}
+.fc:focus{outline:none;border-color:var(--blue)}
+select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748B'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:24px;padding-right:40px}
+
+/* BUTTONS */
+.btn{display:block;width:100%;padding:14px 20px;border:none;border-radius:10px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;transition:all .18s}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:active{background:var(--blue-dk);transform:scale(.98)}
+.btn-orange{background:var(--orange);color:#fff}.btn-orange:active{background:var(--orange-dk);transform:scale(.98)}
+.btn-outline{background:#fff;color:var(--blue);border:2px solid var(--blue)}.btn-outline:active{background:var(--blue-lt)}
+.btn-green{background:var(--green);color:#fff}
+.btn:disabled{background:var(--g400);cursor:not-allowed}
+
+/* EXAM */
+.exam-hd{background:var(--blue);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:40}
+.exam-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.exam-qn{font-size:13px;font-weight:800;color:#fff}
+.timer-chip{background:rgba(255,255,255,.18);border-radius:99px;padding:4px 12px;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;transition:background .3s}
+.timer-chip.warn{background:rgba(245,158,11,.7)}
+.timer-chip.danger{background:rgba(220,38,38,.85);animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.prog-wrap{background:rgba(255,255,255,.2);border-radius:99px;height:5px}
+.prog-fill{background:var(--orange);border-radius:99px;height:5px;transition:width .3s}
+
+.q-card{background:#fff;border-radius:var(--r);margin:12px 16px;box-shadow:var(--shadow);overflow:hidden}
+.q-badge{background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:800;padding:8px 16px;border-bottom:2px solid #c7d2fe}
+.q-cat{font-size:11px;color:var(--orange);font-weight:700;padding:8px 16px 0}
+.q-text{padding:10px 18px 16px;font-size:16px;font-weight:600;line-height:1.6;color:#0F172A}
+.opts{padding:0 16px 16px}
+.opt{width:100%;text-align:left;background:#fff;border:2px solid var(--g200);border-radius:10px;padding:14px 16px;margin-bottom:10px;font-size:15px;font-family:inherit;color:var(--g700);cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:all .15s;line-height:1.4}
+.opt:active{transform:scale(.985)}
+.opt.sel{border-color:var(--blue);background:var(--blue-lt);color:var(--blue);font-weight:600}
+.obadge{min-width:28px;height:28px;border-radius:50%;background:var(--g100);color:var(--g500);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.opt.sel .obadge{background:var(--blue);color:#fff}
+
+/* RESULTS */
+.res-hero{background:linear-gradient(135deg,var(--blue-dk) 0%,var(--blue) 50%,var(--orange-dk) 100%);color:#fff;padding:32px 20px;text-align:center}
+.res-name{font-size:13px;opacity:.8;margin-bottom:10px}
+.score-ring{width:120px;height:120px;border-radius:50%;border:5px solid rgba(255,255,255,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 12px;background:rgba(255,255,255,.12)}
+.score-n{font-size:38px;font-weight:900;line-height:1;color:#fff}
+.score-d{font-size:13px;opacity:.75}
+.score-pct{font-size:26px;font-weight:900;color:var(--orange)}
+.score-grade{font-size:14px;opacity:.85;margin-top:2px}
+.res-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.res-tag{background:rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:700;padding:5px 13px;border-radius:99px}
+.res-tag.pass{background:rgba(22,163,74,.4)}
+.res-tag.fail{background:rgba(220,38,38,.4)}
+
+.sec-t{font-size:14px;font-weight:800;color:var(--g700);padding:16px 16px 8px}
+.cat-row{margin-bottom:16px}
+.cat-lr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.cat-name{font-size:14px;font-weight:600;color:var(--g700)}
+.cat-sc{font-size:13px;font-weight:800}
+.bar-w{background:var(--g200);border-radius:99px;height:8px}
+.bar-f{border-radius:99px;height:8px;transition:width .6s ease}
+.cbadge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:6px}
+.cb-s{background:var(--green-lt);color:var(--green)}
+.cb-w{background:var(--red-lt);color:var(--red)}
+.cb-m{background:var(--yellow-lt);color:var(--yellow)}
+
+.a-box{border-radius:10px;padding:14px;margin-bottom:10px}
+.a-strong{background:var(--green-lt);border-left:4px solid var(--green)}
+.a-weak{background:var(--red-lt);border-left:4px solid var(--red)}
+.a-mid{background:var(--yellow-lt);border-left:4px solid var(--yellow)}
+.a-title{font-size:13px;font-weight:800;margin-bottom:6px}
+.a-strong .a-title{color:var(--green)}
+.a-weak .a-title{color:var(--red)}
+.a-mid .a-title{color:#92400e}
+.a-text{font-size:13px;color:var(--g700);line-height:1.55}
+
+/* ADMIN */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 16px 0}
+.stat-c{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--shadow);text-align:center}
+.stat-n{font-size:28px;font-weight:900;color:var(--blue)}
+.stat-l{font-size:12px;color:var(--g500);margin-top:3px}
+
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid var(--g200);position:sticky;top:0;z-index:40}
+.tab-btn{flex:1;padding:13px 6px;font-size:13px;font-weight:700;font-family:inherit;background:none;border:none;color:var(--g500);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab-btn.on{color:var(--blue);border-bottom-color:var(--orange)}
+
+.zone-bar{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
+.zone-bar::-webkit-scrollbar{display:none}
+.z-pill{padding:7px 16px;border-radius:99px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;border:2px solid var(--g200);background:#fff;color:var(--g700);white-space:nowrap;transition:all .15s;flex-shrink:0}
+.z-pill.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+.p-card{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.08)}
+.p-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.p-name{font-size:15px;font-weight:700;color:var(--g900)}
+.p-score{font-size:18px;font-weight:900;color:var(--blue)}
+.p-meta{font-size:12px;color:var(--g500)}
+.pill{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.pill-p{background:var(--green-lt);color:var(--green)}
+.pill-f{background:var(--red-lt);color:var(--red)}
+
+.q-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g100)}
+.q-row:last-child{border:none}
+.q-box{min-width:38px;height:38px;border-radius:8px;background:var(--red-lt);color:var(--red);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.q-txt{flex:1;font-size:13px;color:var(--g700);line-height:1.4}
+.q-pct{font-size:14px;font-weight:800;color:var(--red);flex-shrink:0}
+
+.empty{text-align:center;padding:50px 20px;color:var(--g400)}
+.empty-i{font-size:48px;margin-bottom:12px}
+.empty-t{font-size:15px;font-weight:600;color:var(--g500)}
+
+/* INFO BANNER */
+.info-banner{background:var(--blue-lt);border:1px solid #c7d2fe;border-radius:10px;padding:14px;margin:0 16px 4px;font-size:13px;color:var(--blue);line-height:1.6}
+.warn-banner{background:var(--yellow-lt);border:1px solid #fde68a;border-radius:10px;padding:14px;margin:0 16px 4px;font-size:13px;color:#92400e;line-height:1.6}
+.gas-setup{background:var(--g50);border:2px dashed var(--g200);border-radius:12px;padding:18px;margin:12px 16px}
+.gas-setup h4{font-size:14px;font-weight:800;color:var(--blue);margin-bottom:8px}
+.gas-setup pre{font-size:11px;background:var(--g900);color:#a5f3fc;padding:12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;margin-top:8px;line-height:1.6}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g900);color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1}
+
+/* LOADER */
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;color:var(--g500)}
+.spinner{width:40px;height:40px;border:4px solid var(--g200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* REVIEW SCREEN */
+.rv-q{background:#fff;border-radius:12px;margin:10px 16px;padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--g200)}
+.rv-q.rv-correct{border-left-color:var(--green)}
+.rv-q.rv-wrong{border-left-color:var(--red)}
+.rv-num{font-size:11px;font-weight:800;color:var(--g500);margin-bottom:4px}
+.rv-cat{font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px}
+.rv-text{font-size:15px;font-weight:600;color:#0F172A;line-height:1.55;margin-bottom:10px}
+.rv-opts{}
+.rv-opt{font-size:14px;padding:9px 12px;border-radius:8px;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px;color:var(--g700);background:var(--g50);line-height:1.4}
+.rv-ans-correct{background:var(--green-lt)!important;color:#166534!important;font-weight:700}
+.rv-ans-wrong{background:var(--red-lt)!important;color:#991B1B!important;font-weight:700}
+.rv-badge{min-width:26px;height:26px;border-radius:50%;background:var(--g200);color:var(--g500);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.rv-ans-correct .rv-badge{background:var(--green);color:#fff}
+.rv-ans-wrong .rv-badge{background:var(--red);color:#fff}
+.rv-score-banner{background:linear-gradient(135deg,var(--blue-dk),var(--blue));color:#fff;padding:20px;text-align:center}
+
+/* ─── DARK MODE ─── */
+@media(prefers-color-scheme:dark){
+  html,body{background:#0d1117;color:#e6edf3}
+  .screen:not(#screen-splash){background:#0d1117}
+  .card,.p-card,.stat-c,.q-card{background:#161b22;color:#e6edf3}
+  .card-t{color:#cdd9e5;border-color:#2d333b}
+  .fl{color:#cdd9e5}
+  .fc{background:#1c2128;border-color:#373e47;color:#e6edf3}
+  .fc:focus{border-color:var(--orange)}
+  .opt{background:#1c2128;border-color:#373e47;color:#cdd9e5}
+  .opt.sel{background:#1a2a4a;color:#93c5fd;border-color:var(--orange)}
+  .opt.sel .obadge{background:var(--orange);color:#fff}
+  .obadge{background:#2d333b;color:#adbac7}
+  .q-text{color:#e6edf3}
+  .q-badge{background:#1e2a4a;color:#93c5fd;border-color:#2d3f6e}
+  .q-cat{color:var(--orange)}
+  .tab-bar{background:#161b22;border-color:#2d333b}
+  .tab-btn{color:#8b949e}
+  .tab-btn.on{color:#93c5fd;border-bottom-color:var(--orange)}
+  .z-pill{background:#1c2128;border-color:#373e47;color:#cdd9e5}
+  .z-pill.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .p-name{color:#e6edf3}
+  .p-meta{color:#8b949e}
+  .sec-t{color:#cdd9e5}
+  .cat-name{color:#cdd9e5}
+  .bar-w{background:#2d333b}
+  /* Analysis boxes – dark mode */
+  .a-strong{background:#0a2118;border-left-color:#4ade80}
+  .a-weak{background:#2b0d0d;border-left-color:#f87171}
+  .a-mid{background:#2a1a06;border-left-color:#fbbf24}
+  .a-strong .a-title{color:#4ade80}
+  .a-weak .a-title{color:#f87171}
+  .a-mid .a-title{color:#fbbf24}
+  .a-text{color:#cdd9e5}
+  .cb-s{background:#0a2118;color:#4ade80}
+  .cb-w{background:#2b0d0d;color:#f87171}
+  .cb-m{background:#2a1a06;color:#fbbf24}
+  .pill-p{background:#0a2118;color:#4ade80}
+  .pill-f{background:#2b0d0d;color:#f87171}
+  .q-box{background:#2b0d0d;color:#f87171}
+  .info-banner{background:#1a2a4a;border-color:#2d3f6e;color:#93c5fd}
+  .warn-banner{background:#2a1e0d;border-color:#5c3a0a;color:#fcd34d}
+  .gas-setup{background:#161b22;border-color:#2d333b}
+  .gas-setup h4{color:#93c5fd}
+  .q-txt{color:#cdd9e5}
+  .q-row{border-color:#2d333b}
+  .empty-t{color:#8b949e}
+  .prog-wrap{background:rgba(255,255,255,.15)}
+  .exam-hd{background:var(--blue-dk)}
+  /* Review dark */
+  .rv-q{background:#161b22;border-left-color:#2d333b}
+  .rv-text{color:#e6edf3}
+  .rv-opt{background:#1c2128;color:#cdd9e5}
+  .rv-ans-correct{background:#0a2118!important;color:#4ade80!important}
+  .rv-ans-wrong{background:#2b0d0d!important;color:#f87171!important}
+  .rv-badge{background:#2d333b;color:#8b949e}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SPLASH ═══ -->
+<div id="screen-splash" class="screen active">
+  <div class="logo-wrap">
+    <div class="logo-main"><span class="logo-th">โมโต</span><span class="logo-num">24</span></div>
+    <div class="logo-sub">บริษัท โมโต24 จำกัด</div>
+  </div>
+  <div class="splash-title">ข้อสอบช่างบริการ</div>
+  <div class="splash-sub">ประจำเดือนมิถุนายน 2569 &nbsp;|&nbsp; 35 ข้อ</div>
+  <div id="splash-content"><!-- filled by JS --></div>
+  <button class="btn-admin" onclick="go('admin-login')" style="margin-top:8px">🔐 เข้าระบบแอดมิน</button>
+</div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="screen-login" class="screen">
+  <div class="login-hero">
+    <div class="logo-wrap" style="transform:scale(.75);transform-origin:center">
+      <div class="logo-main"><span class="logo-th">โมโต</span><span class="logo-num">24</span></div>
+      <div class="logo-sub">บริษัท โมโต24 จำกัด</div>
+    </div>
+    <div style="color:#fff;font-size:13px;opacity:.8;margin-top:14px">กรุณากรอกข้อมูลก่อนเริ่มสอบ</div>
+  </div>
+  <div class="card">
+    <div class="card-t">ข้อมูลผู้เข้าสอบ</div>
+    <div class="fg">
+      <label class="fl">เขตพื้นที่</label>
+      <select class="fc" id="l-zone" onchange="fillBranch()">
+        <option value="">-- เลือกเขต --</option>
+        <option>เขต 1</option><option>เขต 2</option><option>เขต 3</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">สาขา (ที่รับผิดชอบ)</label>
+      <select class="fc" id="l-branch" disabled>
+        <option value="">-- เลือกสาขา --</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">ชื่อ-นามสกุล</label>
+      <input class="fc" id="l-name" type="text" placeholder="กรอกชื่อ-นามสกุล" autocomplete="off">
+    </div>
+    <button class="btn btn-orange" onclick="startExam()" style="margin-top:4px">เริ่มทำข้อสอบ →</button>
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="go('splash')" style="background:none;border:none;color:var(--g500);font-family:inherit;font-size:13px;cursor:pointer">← ย้อนกลับ</button>
+    </div>
+  </div>
+  <div id="exam-time-info" class="info-banner" style="margin-top:0"></div>
+</div>
+
+<!-- ═══ EXAM ═══ -->
+<div id="screen-exam" class="screen">
+  <div class="exam-hd">
+    <div class="exam-row">
+      <div>
+        <div class="exam-qn" id="ex-qn">ข้อที่ 1 / 35</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7)" id="ex-name"></div>
+      </div>
+      <div class="timer-chip" id="timer-chip">--:--</div>
+    </div>
+    <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  </div>
+  <div id="exam-body"></div>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div id="screen-results" class="screen">
+  <div class="res-hero">
+    <div class="res-name" id="r-name"></div>
+    <div class="score-ring">
+      <div class="score-n" id="r-score">0</div>
+      <div class="score-d">/ 35</div>
+    </div>
+    <div class="score-pct" id="r-pct">0%</div>
+    <div class="score-grade" id="r-grade"></div>
+    <div class="res-tags" id="r-tags"></div>
+  </div>
+  <div class="sec-t">📊 คะแนนแยกตามหมวดหมู่</div>
+  <div class="card" id="r-cats"></div>
+  <div class="sec-t">🧠 วิเคราะห์จุดดี - จุดด้อย</div>
+  <div class="card" id="r-analysis"></div>
+  <div class="info-banner" style="margin-top:4px">
+    📌 ผลคะแนนของคุณถูกบันทึกแล้วอัตโนมัติ ไม่ต้องกดส่งใดๆ เพิ่มเติม
+  </div>
+  <div id="r-review-btn" style="padding:8px 16px 0"></div>
+  <div style="padding:10px 16px 30px">
+    <button class="btn btn-outline" onclick="go('splash')">🏠 กลับหน้าหลัก</button>
+  </div>
+</div>
+
+<!-- ═══ REVIEW (เฉลยรายข้อ — หลังสอบ) ═══ -->
+<div id="screen-review" class="screen">
+  <div class="hd">
+    <div class="hd-row">
+      <div>
+        <div class="hd-title">📋 เฉลยข้อสอบของฉัน</div>
+        <div class="hd-sub" id="rv-name"></div>
+      </div>
+      <button onclick="go('splash')" style="background:rgba(255,255,255,.18);border:none;color:#fff;padding:8px 12px;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer">🏠 กลับ</button>
+    </div>
+  </div>
+  <div class="rv-score-banner" id="rv-banner"></div>
+  <div id="review-body" style="padding-bottom:30px"></div>
+</div>
+
+<!-- ═══ ADMIN LOGIN ═══ -->
+<div id="screen-admin-login" class="screen">
+  <div style="padding:60px 24px 24px;text-align:center">
+    <div style="font-size:56px;margin-bottom:16px">🔐</div>
+    <div style="font-size:20px;font-weight:800;margin-bottom:6px">ระบบแอดมิน</div>
+    <div style="font-size:13px;color:var(--g500);margin-bottom:24px">โมโต24 | สำหรับผู้ดูแลระบบ</div>
+    <div class="fg">
+      <input class="fc" id="a-pw" type="password" placeholder="รหัสผ่านแอดมิน" onkeydown="if(event.key==='Enter')adminIn()">
+    </div>
+    <button class="btn btn-blue" onclick="adminIn()">เข้าระบบ</button>
+    <div style="margin-top:14px">
+      <button onclick="go('splash')" style="background:none;border:none;color:var(--g500);font-family:inherit;font-size:13px;cursor:pointer">← ย้อนกลับ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN DASHBOARD ═══ -->
+<div id="screen-admin" class="screen">
+  <div class="hd" style="background:var(--blue-dk)">
+    <div class="hd-row">
+      <div>
+        <div class="hd-title">📊 Admin Dashboard</div>
+        <div class="hd-sub">โมโต24 | ผลสอบ มิ.ย. 2569</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="refreshAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer">🔄</button>
+        <button onclick="adminOut()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer">ออก</button>
+      </div>
+    </div>
+  </div>
+  <div id="admin-stats" class="stat-grid" style="margin-top:12px"></div>
+  <div class="tab-bar" style="margin-top:12px">
+    <button class="tab-btn on" onclick="aTab('overview',this)">ภาพรวม</button>
+    <button class="tab-btn" onclick="aTab('zone',this)">แยกเขต</button>
+    <button class="tab-btn" onclick="aTab('questions',this)">วิเคราะห์ข้อ</button>
+    <button class="tab-btn" onclick="aTab('persons',this)">รายคน</button>
+  </div>
+  <div id="at-overview"></div>
+  <div id="at-zone" style="display:none"></div>
+  <div id="at-questions" style="display:none"></div>
+  <div id="at-persons" style="display:none"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+//  ⚙️  CONFIG — แก้ตรงนี้ก่อนแชร์
+// ════════════════════════════════════════════
+const CFG = {
+  EXAM_START: new Date('2026-06-26T00:00:00'),   // [TEST MODE] เปิดทดสอบ
+  EXAM_END:   new Date('2026-06-26T23:59:00'),   // [TEST MODE] ปิดทดสอบ
+  GAS_URL:    '',   // วาง URL ของ Google Apps Script ที่นี่
+  PASS_SCORE: 25,
+  ADMIN_PW:   'moto24admin'
+};
+
+// ════════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════════
+const BRANCHES = {
+  'เขต 1':['02-ระโนด1 / 29-ระโนด24','03-สิงหนคร / 30-สิงหนคร24','04-สทิงพระ / 27-สทิงพระ24','05-ระโนด2','06-บ่อล้อ / 15-บ่อล้อ24','07-หัวไทร / 18-หัวไทร24','11-ปากพนัง / 26-ปากพนัง24','35-ควนหิน / 36-ควนหิน24','37-บ้านด่าน24'],
+  'เขต 2':['08-ชะอวด / 23-ชะอวด24','09-ร่อนพิบูลย์ / 14-ร่อนพิบูลย์24','10-หัวถนน / 33-หัวถนน24','12-ลานสกา','13-ท่าศาลา / 31-ท่าศาลา24','17-จันดี','34-แยกคูขวาง','38-ทุ่งใหญ่ / 16-ทุ่งใหญ่24','24-นบพิตำ24','25-พิปูน24'],
+  'เขต 3':['19-สตูล24','20-ฉลุง24','21-ท่าแพ24','22-ละงู24','28-ควนกาหลง24','32-รัตภูมิ24']
+};
+
+const CAT_COLOR = {
+  'วาล์วและเครื่องยนต์':'#1D4ED8','ค่าขันแน่น':'#7C3AED',
+  'รหัสปัญหา':'#DC2626','ระบบไฟฟ้าและเซนเซอร์':'#D97706',
+  'ระบบเชื้อเพลิงและหัวฉีด':'#059669','การบำรุงรักษา':'#0891B2',
+  'PDI / ส่งมอบรถ':'#BE185D'
+};
+
+const Q = [
+  {id:1,q:"เมื่อเปิดฝาปิดเฟืองโซ่ราวลิ้น เราต้องดูสิ่งไหนที่ล้อแม่เหล็กก่อนจะทำการปรับตั้งวาล์ว",o:["มาร์คตัว F","ตัวไหนก็ได้","ระหว่างมาร์คตัว F และตัว T","มาร์คตัว T"],a:3,c:"วาล์วและเครื่องยนต์"},
+  {id:2,q:"อัตราขันแน่นนอตฝาสูบ WAVE 110i 2025 อยู่ที่เท่าไหร่",o:["16 นิวตันเมตร","5 นิวตันเมตร","54 นิวตันเมตร","13 นิวตันเมตร"],a:3,c:"ค่าขันแน่น"},
+  {id:3,q:"อัตราขันแน่นล้อแม่เหล็ก WAVE 110i 2025 อยู่ที่เท่าไหร่",o:["64 นิวตันเมตร","54 นิวตันเมตร","27 นิวตันเมตร","49 นิวตันเมตร"],a:0,c:"ค่าขันแน่น"},
+  {id:4,q:"ลมยางล้อหลัง WAVE 110i 2025 ขณะมีคนซ้อน อยู่ที่เท่าไหร่",o:["54 นิวตันเมตร","41 psi","29 ปอนด์","41 นิวตันเมตร"],a:0,c:"การบำรุงรักษา"},
+  {id:5,q:"รอบเดินเบาของ SCOOPY 110i อยู่ที่เท่าไหร่",o:["14,000 ± 100 รอบ/นาที","1,100 ± รอบ/นาที","5,000 ± รอบ/นาที","1,700 ± รอบ/นาที"],a:3,c:"การบำรุงรักษา"},
+  {id:6,q:"ค่ามาตรฐานของแรงเคลื่อนแบตเตอรี่รถ SCOOPY 110i อยู่ที่เท่าไหร่",o:["15.5 V","14.5 V","12.4 V","13.5 V"],a:2,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:7,q:"ในขั้นตอนการลบโค้ดปัญหา เราใช้เวลาเท่าไหร่หลังจากเปิดสวิตช์กุญแจแล้วถอดสายไฟแล้วเสียบกลับ",o:["10 วินาที","7 วินาที","5 วินาที","8 วินาที"],a:2,c:"รหัสปัญหา"},
+  {id:8,q:"การตรวจสอบกระแสไฟรั่วในรถจักรยานยนต์ ขั้ว + ของโวลต์มิเตอร์ต่อเข้ากับส่วนไหน",o:["ขั้ว + ของรถ","ขั้ว - ของแบตเตอรี่","สายขั้ว - ของรถ","สายขั้ว + ของรถ"],a:2,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:9,q:"ค่าความต้านทานของหัวฉีดมีมาตรฐานอยู่ที่เท่าไหร่",o:["4.45-5.25 โวลต์","11.4-12.6 โวลต์","ใกล้เคียงแรงเคลื่อนแบตเตอรี่","11.4-12.6 โอห์ม"],a:3,c:"ระบบเชื้อเพลิงและหัวฉีด"},
+  {id:10,q:"มีเซนเซอร์รหัสตัวไหนที่เมื่อวัดค่าแล้วมีค่าใกล้เคียงกับค่าแบตเตอรี่",o:["21","33","9","29"],a:1,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:11,q:"ระยะความห่างของเขี้ยวหัวเทียนมาตรฐานอยู่ที่เท่าไหร่",o:["1.5 มม.","0.8-0.9 มม.","0.5 มม.","1.0-2.0 มม."],a:1,c:"การบำรุงรักษา"},
+  {id:12,q:"คำว่า IN บนหัวลูกสูบรถมอเตอร์ไซค์ หมายถึงอะไร",o:["IN SIDE","IN SITU","IN TAKE","IN JECTION"],a:2,c:"วาล์วและเครื่องยนต์"},
+  {id:13,q:"ถ้ารถเกิดติดรหัส 54 สตาร์ทไม่ติด คาดการณ์ได้ว่ามีปัญหาตรงชิ้นส่วนไหน",o:["ปั๊มน้ำมันเชื้อเพลิง","ตัวตรวจจับความดัน","ตัวตรวจจับการเอียงของรถ","ตัวตรวจจับตำแหน่งเพลาข้อเหวี่ยง CKP"],a:3,c:"รหัสปัญหา"},
+  {id:14,q:"หากทำการตรวจสอบไฟเลี้ยงเซ็นเซอร์อุณหภูมิด้วยมัลติมิเตอร์ สาย + ต้องต่อเข้ากับสายสีไหน",o:["ดำ/น้ำเงิน","น้ำเงิน/เหลือง","เหลือง/น้ำเงิน","ลงกราวน์"],a:2,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:15,q:"WAVE 110i 2025 มีระยะห่างวาล์วไอดี-ไอเสีย อยู่ที่เท่าไหร่",o:["0.5-0.5 มม.","0.16-0.18 มม.","0.10-0.20 มม.","0.08-0.20 มม."],a:3,c:"วาล์วและเครื่องยนต์"},
+  {id:16,q:"จังหวะโอเวอร์แลปมีไว้เพื่อประโยชน์อะไร",o:["เพื่อให้ไอดีมาขับไล่ไอเสีย เตรียมห้องเผาไหม้ในการจุดระเบิดรอบต่อไป","เพื่อตั้งมาร์คให้ตรงจังหวะขณะประกอบเครื่องยนต์","เพื่อตั้งวาล์วในจังหวะนี้","ก่อนถอดเครื่องยนต์ต้องหมุนหาตำแหน่งโอเวอร์แลปเพื่อความสะดวก"],a:0,c:"วาล์วและเครื่องยนต์"},
+  {id:17,q:"การตั้งระยะห่างของวาล์วไอดีและไอเสีย ต้องตั้งในจังหวะใดจึงจะถูกต้องที่สุด",o:["จังหวะที่ลูกสูบอยู่ที่ศูนย์ตายบน","จังหวะอัดสุด","จังหวะที่ลูกสูบอยู่ศูนย์ตายล่าง","จังหวะโอเวอร์แลป"],a:1,c:"วาล์วและเครื่องยนต์"},
+  {id:18,q:"อัตราส่วนผสมระหว่างน้ำมันกับอากาศข้อใดที่ทำให้เกิดการเผาไหม้อย่างสมบูรณ์",o:["7 : 1","10 : 1","15 : 1","12 : 1"],a:2,c:"วาล์วและเครื่องยนต์"},
+  {id:19,q:"การตรวจสอบสภาพรถจักรยานยนต์ก่อนส่งมอบ สิ่งที่ต้องทำก่อนสตาร์ทเครื่องยนต์เสมอคือ",o:["ต้องตรวจสอบระดับน้ำมันเครื่องก่อน","ต้องตรวจสอบระดับน้ำหล่อเย็นก่อน","ต้องประกอบกระจกมองหลังก่อนเพื่อความปลอดภัย","ตรวจสอบลมยางก่อน"],a:0,c:"PDI / ส่งมอบรถ"},
+  {id:20,q:"การทำ PDI คืออะไร",o:["การแนะนำวิธีการใช้รถให้กับลูกค้า","การตรวจสอบสภาพรถจักรยานยนต์","การเคลมด้านเทคนิคในการรับประกัน","หลักสูตรพื้นฐานการขับขี่ปลอดภัย"],a:0,c:"PDI / ส่งมอบรถ"},
+  {id:21,q:"ในการถอดประกอบแบตเตอรี่ ควรจะทำการถอดสายไฟที่เชื่อมกับแบตเตอรี่สายใดก่อน",o:["ถอดขั้วบวกก่อน / ประกอบขั้วลบก่อน","ถอดขั้วลบก่อน / ประกอบขั้วบวกก่อน","ถอดขั้วลบก่อน / ประกอบขั้วลบก่อน","ถอดหรือประกอบขั้วใดก่อนก็ได้"],a:1,c:"การบำรุงรักษา"},
+  {id:22,q:"การปรับตั้งโซ่ขับเคลื่อนตามมาตรฐาน ระยะหย่อนเท่าใด",o:["2.5 มม. - 1 นิ้ว","2.5 มม. - 2 นิ้ว","3.5 มม. - 3 นิ้ว","4.5 มม. - 4 นิ้ว"],a:0,c:"การบำรุงรักษา"},
+  {id:23,q:"การใส่คลิ๊ปล็อคโซ่ ต้องใส่ให้ด้านโค้งของคลิ๊ปล็อคหันไปทางใด",o:["ไปทางหน้ารถ","ไปทางท้ายรถ","ไปตามทิศทางการหมุนของโซ่","ตรงข้ามทิศทางการหมุนของโซ่"],a:2,c:"การบำรุงรักษา"},
+  {id:24,q:"ข้อใดคือมาตรฐานอัตราการขันแน่นของหัวเทียน",o:["10 นิวตันเมตร","16 นิวตันเมตร","24 นิวตันเมตร","18 นิวตันเมตร"],a:1,c:"ค่าขันแน่น"},
+  {id:25,q:"รหัส 29 ในรถจักรยานยนต์ฮอนด้า เป็นรหัสปัญหาของตำแหน่งอะไร",o:["ตัวตรวจจับออกซิเจน","ตำแหน่งเพลาข้อเหวี่ยง","วาล์วควบคุมอากาศรอบเดินเบา","หัวฉีด"],a:2,c:"รหัสปัญหา"},
+  {id:26,q:"สีของหัวเทียนสามารถวิเคราะห์การทำงานของเครื่องยนต์ได้ ถ้าหัวเทียนสีขาว แสดงว่าเครื่องยนต์เป็นอย่างไร",o:["ส่วนผสมเหมาะสมที่สุด","ส่วนผสมบาง","ส่วนผสมหนา","มีน้ำมันเครื่องในห้องเผาไหม้"],a:1,c:"ระบบเชื้อเพลิงและหัวฉีด"},
+  {id:27,q:"สายไฟเลี้ยงกล่อง ECM เป็นสายสีอะไร",o:["ดำ/น้ำเงิน","น้ำเงิน/ดำ","เขียว","น้ำตาล"],a:0,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:28,q:"การตรวจสอบไฟเลี้ยงปั๊มน้ำมันเชื้อเพลิง การวัดค่ามาตรฐานต้องอ่านค่าภายในกี่วินาที",o:["เปิดสวิตช์กุญแจ อ่านค่าที่วัดได้เลย","เปิดสวิตช์กุญแจ อ่านค่าภายใน 3 วินาที","เปิดสวิตช์กุญแจ อ่านค่าให้ใกล้เคียงแบตเตอรี่","เปิดสวิตช์กุญแจ อ่านค่าภายใน 2 วินาที"],a:3,c:"ระบบเชื้อเพลิงและหัวฉีด"},
+  {id:29,q:"จะทำการรีเซ็ตเซ็นเซอร์ตำแหน่งเรือนลิ้นเร่งในกรณีใด",o:["เมื่อเปลี่ยนกล่อง ECM","เมื่อเปลี่ยนตัวตรวจจับอุณหภูมิน้ำมันเครื่อง","เมื่อมีการถอดแยกชุดเรือนลิ้นเร่งออก","เมื่อเปลี่ยนหัวฉีด"],a:2,c:"ระบบเชื้อเพลิงและหัวฉีด"},
+  {id:30,q:"การปรับตั้งระยะห่างวาล์วของรถจักรยานยนต์รุ่น Wave 110i 2024/2025 ค่ามาตรฐานอยู่ที่เท่าใด",o:["ไอดี 1.0  ไอเสีย 1.0 มม.","ไอดี 0.8  ไอเสีย 2.0 มม.","ไอดี 0.9  ไอเสีย 0.8 มม.","ไอดี 0.8  ไอเสีย 1.0 มม."],a:1,c:"วาล์วและเครื่องยนต์"},
+  {id:31,q:"ค่ามาตรฐานระยะห่างวาล์วไอดีอยู่ที่เท่าไร",o:["0.07 มม.","0.08 มม.","0.09 มม.","0.10 มม."],a:1,c:"วาล์วและเครื่องยนต์"},
+  {id:32,q:"อัตราขันแน่นของนอตยึดเฟืองแคม Honda Wave 110i อยู่ที่เท่าไร",o:["25 นิวตัน","26 นิวตัน","27 นิวตัน","24 นิวตัน"],a:2,c:"ค่าขันแน่น"},
+  {id:33,q:"ไฟกะพริบเตือนรูปเครื่องยนต์บนหน้าปัด Wave 110i กะพริบยาว 3 ครั้ง กะพริบสั้น 3 ครั้ง คือรหัสปัญหาอะไร",o:["หัวฉีด","อุณหภูมิน้ำมันเครื่อง","เรือนลิ้นเร่ง","กล่อง ECM"],a:3,c:"รหัสปัญหา"},
+  {id:34,q:"ตรวจสอบไฟเลี้ยงเซนเซอร์ตรวจจับอุณหภูมิน้ำมันเครื่อง ค่ามาตรฐานอยู่ที่เท่าไร",o:["4.25-5.75 V","4.52-5.57 V","4.75-5.25 V","4.57-5.52 V"],a:2,c:"ระบบไฟฟ้าและเซนเซอร์"},
+  {id:35,q:"อัตราขันแน่นของหัวเทียน Honda Wave 110i อยู่ที่เท่าไร",o:["13 นิวตัน","14 นิวตัน","15 นิวตัน","16 นิวตัน"],a:3,c:"ค่าขันแน่น"}
+];
+
+const OL = ['ก','ข','ค','ง'];
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let S = {name:'',zone:'',branch:'',shuffled:[],cur:0,ans:[],timerID:null,submitted:false};
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ════════════════════════════════════════════
+//  SPLASH — TIME WINDOW CHECK
+// ════════════════════════════════════════════
+let splashTimer=null;
+
+function initSplash(){
+  if(splashTimer) clearInterval(splashTimer);
+  renderSplash();
+  splashTimer=setInterval(renderSplash, 1000);
+}
+
+function renderSplash(){
+  const now=new Date(), start=CFG.EXAM_START, end=CFG.EXAM_END;
+  const box=document.getElementById('splash-content');
+  const fmt=d=>`${d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'})}<br>เวลา ${pad(d.getHours())}:${pad(d.getMinutes())} น.`;
+
+  if(now < start){
+    // Before exam
+    const diff=start-now;
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    box.innerHTML=`
+      <div class="status-badge status-soon">⏳ ยังไม่ถึงเวลาสอบ</div>
+      <div class="countdown-box">
+        <div class="countdown-label">เริ่มสอบใน</div>
+        <div class="countdown-time">${pad(h)}:${pad(m)}:${pad(s)}</div>
+        <div class="countdown-date">${fmt(start)}</div>
+      </div>`;
+  } else if(now >= start && now <= end){
+    // Exam open
+    const diff=end-now;
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    const rv=loadReview();
+    const doneBtn=rv?`<div style="font-size:12px;opacity:.75;margin-top:10px">✅ ส่งแล้ว: ${rv.name} (${rv.score}/${rv.total} คะแนน)</div>`:'';
+    box.innerHTML=`
+      <div class="status-badge status-open">✅ เปิดรับการสอบแล้ว</div>
+      <div class="countdown-box">
+        <div class="countdown-label">ปิดรับในอีก</div>
+        <div class="countdown-time">${pad(h)}:${pad(m)}:${pad(s)}</div>
+        <div class="countdown-date">ปิดสอบ ${fmt(end)}</div>
+      </div>
+      <button class="btn-splash" onclick="go('login')">${rv?'ทำข้อสอบใหม่':'เริ่มทำข้อสอบ →'}</button>
+      ${doneBtn}`;
+  } else {
+    // After exam — check if has saved review
+    const rv=loadReview();
+    const rvBtn=rv?`<button class="btn-splash" onclick="showReview()" style="margin-bottom:10px">📋 ดูเฉลยข้อสอบของฉัน</button>
+      <div style="font-size:12px;opacity:.7;margin-top:-6px;margin-bottom:16px">${rv.name} | ${rv.branch}</div>`:'';
+    box.innerHTML=`
+      <div class="status-badge status-closed">⛔ สิ้นสุดการสอบแล้ว</div>
+      <div class="countdown-box" style="opacity:.7;margin-bottom:20px">
+        <div class="countdown-label">การสอบปิดเมื่อ</div>
+        <div class="countdown-time" style="font-size:26px">${pad(end.getHours())}:${pad(end.getMinutes())}</div>
+        <div class="countdown-date">${fmt(end)}</div>
+      </div>
+      ${rvBtn}`;
+    clearInterval(splashTimer);
+  }
+}
+
+// ════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════
+function fillBranch(){
+  const z=document.getElementById('l-zone').value;
+  const sel=document.getElementById('l-branch');
+  sel.innerHTML='<option value="">-- เลือกสาขา --</option>';
+  if(z&&BRANCHES[z]){
+    BRANCHES[z].forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b;sel.appendChild(o);});
+    sel.disabled=false;
+  } else sel.disabled=true;
+
+  // Show exam time info
+  const now=new Date();
+  const info=document.getElementById('exam-time-info');
+  if(now>=CFG.EXAM_START && now<=CFG.EXAM_END){
+    const diff=CFG.EXAM_END-now;
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000);
+    info.textContent=`⏱ เหลือเวลาสอบอีก ${h > 0 ? h+'ชม. ':''} ${m} นาที | ปิดสอบ ${pad(CFG.EXAM_END.getHours())}:${pad(CFG.EXAM_END.getMinutes())} น.`;
+    info.style.display='block';
+  } else info.style.display='none';
+}
+
+function startExam(){
+  const zone=document.getElementById('l-zone').value;
+  const branch=document.getElementById('l-branch').value;
+  const name=document.getElementById('l-name').value.trim();
+  if(!zone){toast('กรุณาเลือกเขต');return;}
+  if(!branch){toast('กรุณาเลือกสาขา');return;}
+  if(!name){toast('กรุณากรอกชื่อ-นามสกุล');return;}
+
+  const now=new Date();
+  if(now<CFG.EXAM_START){toast('ยังไม่ถึงเวลาสอบครับ');return;}
+  if(now>CFG.EXAM_END){toast('หมดเวลาสอบแล้วครับ');return;}
+
+  S={name,zone,branch,shuffled:shuffle([...Q]),cur:0,ans:new Array(35).fill(-1),timerID:null,submitted:false};
+  go('exam');
+  document.getElementById('ex-name').textContent=name+' | '+branch;
+  renderQ();
+  startTimer();
+}
+
+// ════════════════════════════════════════════
+//  EXAM RENDER
+// ════════════════════════════════════════════
+function renderQ(){
+  const q=S.shuffled[S.cur], tot=S.shuffled.length;
+  document.getElementById('ex-qn').textContent=`ข้อที่ ${S.cur+1} / ${tot}`;
+  document.getElementById('prog').style.width=`${(S.cur/tot)*100}%`;
+
+  document.getElementById('exam-body').innerHTML=`
+    <div class="q-card">
+      <div class="q-badge">ข้อที่ ${S.cur+1} จาก ${tot} ข้อ</div>
+      <div class="q-cat">${q.c}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts">
+        ${q.o.map((opt,i)=>`
+          <button class="opt ${S.ans[S.cur]===i?'sel':''}" onclick="pick(${i})">
+            <span class="obadge">${OL[i]}</span>
+            <span>${opt}</span>
+          </button>`).join('')}
+      </div>
+    </div>
+    <div style="padding:0 16px 24px">
+      <button class="btn btn-orange" onclick="next()" ${S.ans[S.cur]===-1?'disabled':''} id="btn-next">
+        ${S.cur===tot-1?'📤 ส่งข้อสอบ':'ข้อถัดไป →'}
+      </button>
+    </div>`;
+}
+
+function pick(i){
+  if(S.submitted) return;
+  S.ans[S.cur]=i;
+  document.querySelectorAll('.opt').forEach((b,j)=>{
+    b.classList.toggle('sel',j===i);
+    b.querySelector('.obadge').textContent=OL[j];
+    if(j===i) b.querySelector('.obadge').style.cssText='background:var(--orange);color:#fff';
+    else b.querySelector('.obadge').style.cssText='';
+  });
+  document.getElementById('btn-next').disabled=false;
+}
+
+function next(){
+  if(S.ans[S.cur]===-1){toast('กรุณาเลือกคำตอบก่อน');return;}
+  if(S.cur<S.shuffled.length-1){S.cur++;renderQ();window.scrollTo(0,0);}
+  else doSubmit();
+}
+
+// ════════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════════
+function startTimer(){
+  if(S.timerID) clearInterval(S.timerID);
+  S.timerID=setInterval(()=>{
+    const rem=CFG.EXAM_END-new Date();
+    if(rem<=0){clearInterval(S.timerID);toast('⏰ หมดเวลา! บันทึกคำตอบอัตโนมัติ');setTimeout(doSubmit,800);return;}
+    const chip=document.getElementById('timer-chip');
+    if(!chip) return;
+    const h=Math.floor(rem/3600000), m=Math.floor((rem%3600000)/60000), s=Math.floor((rem%60000)/1000);
+    chip.textContent=h>0?`${pad(h)}:${pad(m)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
+    chip.className='timer-chip'+(rem<300000?' danger':rem<600000?' warn':'');
+  },1000);
+}
+
+// ════════════════════════════════════════════
+//  SUBMIT
+// ════════════════════════════════════════════
+function doSubmit(){
+  if(S.submitted) return;
+  S.submitted=true;
+  if(S.timerID) clearInterval(S.timerID);
+
+  let score=0;
+  const catStats={};
+  const wrongQIDs=[];
+
+  S.shuffled.forEach((q,i)=>{
+    if(!catStats[q.c]) catStats[q.c]={total:0,correct:0};
+    catStats[q.c].total++;
+    if(S.ans[i]===q.a){score++;catStats[q.c].correct++;}
+    else wrongQIDs.push(q.id);
+  });
+
+  const pct=Math.round(score/35*100);
+  const pass=score>=CFG.PASS_SCORE;
+  const date=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  const result={name:S.name,zone:S.zone,branch:S.branch,score,total:35,pct,pass,catStats,wrongQIDs,date,ts:Date.now()};
+  saveLocal(result);
+  postGAS(result);
+  // Save review data (shuffled order + answers) for self-review after exam
+  saveReview({name:S.name,zone:S.zone,branch:S.branch,score,total:35,pct,pass,
+    shuffledIDs:S.shuffled.map(q=>q.id), answers:[...S.ans], date});
+
+  go('results');
+  renderResults(result);
+}
+
+// ════════════════════════════════════════════
+//  RESULTS RENDER
+// ════════════════════════════════════════════
+function renderResults(r){
+  document.getElementById('r-name').textContent=`${r.name} | ${r.branch} (${r.zone})`;
+  document.getElementById('r-score').textContent=r.score;
+  document.getElementById('r-pct').textContent=`${r.pct}%`;
+
+  const g=r.pct>=90?'ยอดเยี่ยม 🏆':r.pct>=80?'ดีมาก ⭐':r.pct>=70?'ดี ✅':r.pass?'ผ่าน':'ต้องปรับปรุง ❗';
+  document.getElementById('r-grade').textContent=g;
+  document.getElementById('r-tags').innerHTML=`
+    <span class="res-tag">${r.zone}</span>
+    <span class="res-tag">${r.branch}</span>
+    <span class="res-tag ${r.pass?'pass':'fail'}">${r.pass?'✅ ผ่าน':'❌ ไม่ผ่าน'} (ผ่าน≥${CFG.PASS_SCORE})</span>`;
+
+  // Categories
+  let cHtml='';
+  Object.entries(r.catStats).forEach(([cat,s])=>{
+    const p=Math.round(s.correct/s.total*100);
+    const col=CAT_COLOR[cat]||'#1A3B9E';
+    const badge=p>=80?'<span class="cbadge cb-s">เก่ง</span>':p>=60?'<span class="cbadge cb-m">พอใช้</span>':'<span class="cbadge cb-w">ต้องพัฒนา</span>';
+    cHtml+=`<div class="cat-row">
+      <div class="cat-lr"><span class="cat-name">${cat}${badge}</span><span class="cat-sc" style="color:${col}">${s.correct}/${s.total} (${p}%)</span></div>
+      <div class="bar-w"><div class="bar-f" style="width:${p}%;background:${col}"></div></div>
+    </div>`;
+  });
+  document.getElementById('r-cats').innerHTML=cHtml;
+
+  // Analysis
+  const strong=Object.entries(r.catStats).filter(([,s])=>s.correct/s.total>=0.8).map(([c])=>c);
+  const weak=Object.entries(r.catStats).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+  const mid=Object.entries(r.catStats).filter(([,s])=>{const p=s.correct/s.total;return p>=0.6&&p<0.8;}).map(([c])=>c);
+  let aHtml='';
+  if(strong.length) aHtml+=`<div class="a-box a-strong"><div class="a-title">💪 จุดแข็ง</div><div class="a-text">ทำได้ดีในหัวข้อ <strong>${strong.join(', ')}</strong> — รักษามาตรฐานนี้ไว้</div></div>`;
+  if(weak.length) aHtml+=`<div class="a-box a-weak"><div class="a-title">⚠️ ต้องพัฒนาด่วน</div><div class="a-text">ควรทบทวนหัวข้อ <strong>${weak.join(', ')}</strong> เพิ่มเติม เนื่องจากคะแนนต่ำกว่า 60%</div></div>`;
+  if(mid.length) aHtml+=`<div class="a-box a-mid"><div class="a-title">📚 ควรทบทวน</div><div class="a-text">หัวข้อ <strong>${mid.join(', ')}</strong> ยังมีช่องว่างให้พัฒนา</div></div>`;
+  if(!aHtml) aHtml=`<div class="a-box a-strong"><div class="a-title">🎉 ยอดเยี่ยม!</div><div class="a-text">คุณทำได้ดีในทุกหัวข้อ!</div></div>`;
+  document.getElementById('r-analysis').innerHTML=aHtml;
+
+  // Show review button only after exam ends
+  const rvBtn=document.getElementById('r-review-btn');
+  if(new Date()>CFG.EXAM_END){
+    rvBtn.innerHTML=`<button class="btn btn-blue" onclick="showReview()">📋 ดูเฉลยรายข้อของฉัน</button>`;
+  } else {
+    rvBtn.innerHTML=`<div class="warn-banner" style="margin:0">🔒 เฉลยรายข้อจะเปิดให้ดูหลัง ${pad(CFG.EXAM_END.getHours())}:${pad(CFG.EXAM_END.getMinutes())} น.</div>`;
+  }
+}
+
+// ════════════════════════════════════════════
+//  STORAGE — LOCAL
+// ════════════════════════════════════════════
+function saveLocal(r){
+  const all=loadLocal();
+  const idx=all.findIndex(x=>x.name===r.name&&x.branch===r.branch);
+  if(idx>=0) all[idx]=r; else all.push(r);
+  try{localStorage.setItem('moto24_exam_jun69',JSON.stringify(all));}catch(e){}
+}
+function loadLocal(){try{return JSON.parse(localStorage.getItem('moto24_exam_jun69')||'[]');}catch{return [];}}
+
+// Review data (per-device, one person per device)
+function saveReview(d){try{localStorage.setItem('moto24_review_jun69',JSON.stringify(d));}catch(e){}}
+function loadReview(){try{return JSON.parse(localStorage.getItem('moto24_review_jun69')||'null');}catch{return null;}}
+
+// ════════════════════════════════════════════
+//  REVIEW FUNCTIONS
+// ════════════════════════════════════════════
+function showReview(){
+  const data=loadReview();
+  if(!data){toast('ไม่พบข้อมูลการสอบในอุปกรณ์นี้');return;}
+  go('review');
+  renderReview(data);
+}
+
+function renderReview(data){
+  document.getElementById('rv-name').textContent=`${data.name} | ${data.branch} (${data.zone})`;
+
+  const pClass=data.pass?'color:#4ade80':'color:#f87171';
+  document.getElementById('rv-banner').innerHTML=`
+    <div style="font-size:13px;opacity:.8;margin-bottom:6px">${data.name}</div>
+    <div style="font-size:36px;font-weight:900;${pClass}">${data.score}<span style="font-size:18px;color:rgba(255,255,255,.7)">/${data.total}</span></div>
+    <div style="font-size:16px;font-weight:700;margin-top:2px;${pClass}">${data.pct}% &nbsp;—&nbsp; ${data.pass?'✅ ผ่าน':'❌ ไม่ผ่าน'}</div>
+    <div style="font-size:11px;opacity:.65;margin-top:6px">สอบเมื่อ ${data.date}</div>`;
+
+  const qMap={};
+  Q.forEach(q=>qMap[q.id]=q);
+
+  let html='<div class="sec-t">🔍 เฉลยรายข้อ — คลิกเพื่อดูคำตอบที่ถูกต้อง</div>';
+  (data.shuffledIDs||[]).forEach((qId,i)=>{
+    const q=qMap[qId];
+    if(!q) return;
+    const ua=data.answers[i];
+    const correct=q.a;
+    const right=ua===correct;
+    html+=`<div class="rv-q ${right?'rv-correct':'rv-wrong'}">
+      <div class="rv-num">ข้อที่ ${i+1} ${right?'✅':'❌'}</div>
+      <div class="rv-cat">${q.c}</div>
+      <div class="rv-text">${q.q}</div>
+      <div class="rv-opts">
+        ${q.o.map((opt,j)=>{
+          let cls='';
+          if(j===correct) cls='rv-ans-correct';
+          else if(j===ua&&ua!==correct) cls='rv-ans-wrong';
+          const suffix=j===correct?' ← คำตอบที่ถูกต้อง':j===ua&&ua!==correct?' ← คุณเลือก':'';
+          return `<div class="rv-opt ${cls}"><span class="rv-badge">${OL[j]}</span><span>${opt}${suffix?`<strong>${suffix}</strong>`:''}</span></div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('review-body').innerHTML=html;
+}
+
+// ════════════════════════════════════════════
+//  STORAGE — GOOGLE APPS SCRIPT
+// ════════════════════════════════════════════
+async function postGAS(result){
+  if(!CFG.GAS_URL) return;
+  try{
+    await fetch(CFG.GAS_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'data='+encodeURIComponent(JSON.stringify(result))
+    });
+  }catch(e){console.warn('GAS post:',e);}
+}
+
+async function fetchGAS(){
+  if(!CFG.GAS_URL) return null;
+  try{
+    const r=await fetch(CFG.GAS_URL+'?action=list',{redirect:'follow'});
+    return await r.json();
+  }catch(e){console.warn('GAS fetch:',e);return null;}
+}
+
+// ════════════════════════════════════════════
+//  ADMIN
+// ════════════════════════════════════════════
+function adminIn(){
+  const pw=document.getElementById('a-pw').value;
+  if(pw===CFG.ADMIN_PW){go('admin');renderAdmin();}
+  else toast('รหัสผ่านไม่ถูกต้อง');
+}
+function adminOut(){document.getElementById('a-pw').value='';go('splash');}
+
+async function renderAdmin(){
+  // Show loader
+  ['at-overview','at-zone','at-questions','at-persons'].forEach(id=>{
+    document.getElementById(id).innerHTML='<div class="loader"><div class="spinner"></div><div>กำลังโหลดข้อมูล...</div></div>';
+  });
+
+  let results=[];
+  if(CFG.GAS_URL){
+    const gas=await fetchGAS();
+    if(gas&&Array.isArray(gas)) results=gas;
+    else results=loadLocal();
+  } else results=loadLocal();
+
+  renderAdminStats(results);
+  renderOverview(results);
+  renderByZone(results,'ทั้งหมด');
+  renderQAnalysis(results);
+  renderPersons(results,'ทั้งหมด');
+}
+
+async function refreshAdmin(){toast('🔄 กำลังรีเฟรช...');await renderAdmin();}
+
+function renderAdminStats(R){
+  const pass=R.filter(r=>r.pass).length;
+  const avg=R.length?Math.round(R.reduce((s,r)=>s+r.score,0)/R.length):0;
+  document.getElementById('admin-stats').innerHTML=`
+    <div class="stat-c"><div class="stat-n">${R.length}</div><div class="stat-l">ผู้เข้าสอบ</div></div>
+    <div class="stat-c"><div class="stat-n" style="color:var(--green)">${pass}</div><div class="stat-l">ผ่าน (${R.length?Math.round(pass/R.length*100):0}%)</div></div>
+    <div class="stat-c"><div class="stat-n" style="color:var(--orange)">${avg}</div><div class="stat-l">คะแนนเฉลี่ย</div></div>
+    <div class="stat-c"><div class="stat-n" style="color:var(--red)">${R.length-pass}</div><div class="stat-l">ไม่ผ่าน</div></div>`;
+}
+
+function renderOverview(R){
+  const d=document.getElementById('at-overview');
+  if(!R.length){d.innerHTML=emptyState('ยังไม่มีข้อมูล','รอผู้เข้าสอบทำข้อสอบ');return;}
+
+  // Overall category aggregate
+  const agg={};
+  R.forEach(r=>Object.entries(r.catStats||{}).forEach(([c,s])=>{
+    if(!agg[c]) agg[c]={total:0,correct:0};
+    agg[c].total+=s.total; agg[c].correct+=s.correct;
+  }));
+
+  let html='<div class="sec-t">📊 ภาพรวมคะแนนทุกหมวด</div><div class="card">';
+  Object.entries(agg).forEach(([c,s])=>{
+    const p=Math.round(s.correct/s.total*100);
+    const col=CAT_COLOR[c]||'#1A3B9E';
+    const badge=p>=80?'<span class="cbadge cb-s">ดี</span>':p>=60?'<span class="cbadge cb-m">พอใช้</span>':'<span class="cbadge cb-w">ต้องพัฒนา</span>';
+    html+=`<div class="cat-row"><div class="cat-lr"><span class="cat-name">${c}${badge}</span><span class="cat-sc" style="color:${col}">${p}%</span></div><div class="bar-w"><div class="bar-f" style="width:${p}%;background:${col}"></div></div></div>`;
+  });
+  html+='</div>';
+
+  const weakCats=Object.entries(agg).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+  if(weakCats.length) html+=`<div class="a-box a-weak" style="margin:0 16px 12px"><div class="a-title">🚨 หัวข้อที่ต้องเร่งพัฒนา (คะแนนรวม < 60%)</div><div class="a-text"><strong>${weakCats.join(', ')}</strong><br>ควรจัดอบรม/KM ในหัวข้อเหล่านี้เพิ่มเติม</div></div>`;
+
+  if(!CFG.GAS_URL) html+=`<div class="warn-banner">⚠️ ขณะนี้ใช้ข้อมูลจากอุปกรณ์เครื่องนี้เท่านั้น ตั้งค่า GAS_URL เพื่อดูผลจากทุกเครื่อง</div>`;
+
+  d.innerHTML=html;
+}
+
+let curZone='ทั้งหมด';
+function renderByZone(R, zone){
+  curZone=zone;
+  const d=document.getElementById('at-zone');
+  const zones=['ทั้งหมด','เขต 1','เขต 2','เขต 3'];
+  let html=`<div class="zone-bar">${zones.map(z=>`<button class="z-pill ${z===zone?'on':''}" onclick="renderByZone(window._adminResults,'${z}')">${z}</button>`).join('')}</div>`;
+  window._adminResults=R;
+
+  const filtered=zone==='ทั้งหมด'?R:R.filter(r=>r.zone===zone);
+  if(!filtered.length){d.innerHTML=html+emptyState('ไม่มีข้อมูล','ยังไม่มีผู้เข้าสอบในเขตนี้');return;}
+
+  const agg={};
+  filtered.forEach(r=>Object.entries(r.catStats||{}).forEach(([c,s])=>{
+    if(!agg[c]) agg[c]={total:0,correct:0};
+    agg[c].total+=s.total; agg[c].correct+=s.correct;
+  }));
+
+  const pass=filtered.filter(r=>r.pass).length;
+  const avg=Math.round(filtered.reduce((s,r)=>s+r.score,0)/filtered.length);
+
+  html+=`<div class="card" style="margin-top:12px">
+    <div class="card-t">${zone==='ทั้งหมด'?'ภาพรวมทุกเขต':zone} — ${filtered.length} คน | ผ่าน ${pass} คน (${Math.round(pass/filtered.length*100)}%) | เฉลี่ย ${avg}/35</div>`;
+  Object.entries(agg).forEach(([c,s])=>{
+    const p=Math.round(s.correct/s.total*100);
+    const col=CAT_COLOR[c]||'#1A3B9E';
+    const badge=p>=80?'<span class="cbadge cb-s">ดี</span>':p>=60?'<span class="cbadge cb-m">พอใช้</span>':'<span class="cbadge cb-w">⚠️ต่ำ</span>';
+    html+=`<div class="cat-row"><div class="cat-lr"><span class="cat-name">${c}${badge}</span><span class="cat-sc" style="color:${col}">${p}%</span></div><div class="bar-w"><div class="bar-f" style="width:${p}%;background:${col}"></div></div></div>`;
+  });
+
+  const weakCats=Object.entries(agg).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+  if(weakCats.length) html+=`<div class="a-box a-weak" style="margin-top:10px"><div class="a-title">⚠️ จุดอ่อนของ${zone}</div><div class="a-text">ต้องพัฒนา: <strong>${weakCats.join(', ')}</strong></div></div>`;
+  // Download button
+  html+=`<button onclick="downloadZoneImg('${zone}',window._adminResults)" style="width:100%;margin-top:14px;padding:12px;border:2px dashed var(--blue);border-radius:10px;background:var(--blue-lt);color:var(--blue);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">📥 บันทึกรายงาน ${zone==='ทั้งหมด'?'(ทุกเขต)':zone} เป็นภาพ</button>`;
+  html+='</div>';
+
+  // Zone breakdown (if showing all)
+  if(zone==='ทั้งหมด'){
+    ['เขต 1','เขต 2','เขต 3'].forEach(z=>{
+      const zR=R.filter(r=>r.zone===z);
+      if(!zR.length) return;
+      const zPass=zR.filter(r=>r.pass).length;
+      const zAvg=Math.round(zR.reduce((s,r)=>s+r.score,0)/zR.length);
+      const zAgg={};
+      zR.forEach(r=>Object.entries(r.catStats||{}).forEach(([c,s])=>{if(!zAgg[c])zAgg[c]={total:0,correct:0};zAgg[c].total+=s.total;zAgg[c].correct+=s.correct;}));
+      const zWeak=Object.entries(zAgg).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+      html+=`<div class="p-card" style="margin:0 16px 10px">
+        <div class="p-row"><span class="p-name">${z}</span><span class="p-score">${zAvg}/35</span></div>
+        <div class="p-meta">${zR.length} คน | ผ่าน ${zPass} คน (${Math.round(zPass/zR.length*100)}%)</div>
+        ${zWeak.length?`<div style="font-size:11px;color:var(--red);margin-top:5px">⚠️ จุดอ่อน: ${zWeak.join(', ')}</div>`:'<div style="font-size:11px;color:var(--green);margin-top:5px">✅ ผ่านทุกหมวด</div>'}
+      </div>`;
+    });
+  }
+
+  d.innerHTML=html;
+}
+
+function renderQAnalysis(R){
+  const d=document.getElementById('at-questions');
+  if(!R.length){d.innerHTML=emptyState('ยังไม่มีข้อมูล','');return;}
+  const wc={};
+  R.forEach(r=>(r.wrongQIDs||[]).forEach(id=>{wc[id]=(wc[id]||0)+1;}));
+  const sorted=Q.map(q=>({...q,wrong:wc[q.id]||0,pct:Math.round(((wc[q.id]||0)/R.length)*100)})).sort((a,b)=>b.wrong-a.wrong);
+  const top=sorted.filter(q=>q.wrong>0).slice(0,15);
+  let html='<div class="sec-t">❌ ข้อที่ทำผิดมากที่สุด (Top 15)</div><div class="card">';
+  if(!top.length) html+='<div class="empty"><div class="empty-t">ยังไม่มีข้อมูลเพียงพอ</div></div>';
+  else top.forEach(q=>{
+    html+=`<div class="q-row">
+      <div class="q-box">Q${q.id}</div>
+      <div class="q-txt"><strong style="font-size:11px;color:var(--orange)">${q.c}</strong><br>${q.q.substring(0,75)}${q.q.length>75?'...':''}</div>
+      <div class="q-pct">${q.pct}%</div>
+    </div>`;
+  });
+  html+='</div>';
+  html+=`<div class="info-banner" style="margin-top:0">💡 เปอร์เซ็นต์ = สัดส่วนผู้สอบที่ตอบผิดข้อนั้น — ข้อที่ตัวเลขสูงควรนำมาทำ KM / อบรมเพิ่มเติม</div>`;
+  d.innerHTML=html;
+}
+
+let curPZone='ทั้งหมด';
+function renderPersons(R, zone){
+  curPZone=zone;
+  window._adminResults=R;
+  const d=document.getElementById('at-persons');
+  const zones=['ทั้งหมด','เขต 1','เขต 2','เขต 3'];
+  let html=`<div class="zone-bar">${zones.map(z=>`<button class="z-pill ${z===zone?'on':''}" onclick="renderPersons(window._adminResults,'${z}')">${z}</button>`).join('')}</div>`;
+  const filtered=zone==='ทั้งหมด'?R:R.filter(r=>r.zone===zone);
+  if(!filtered.length){d.innerHTML=html+emptyState('ไม่มีข้อมูล','');return;}
+  const sorted=[...filtered].sort((a,b)=>b.score-a.score);
+  html+='<div style="padding:0 16px 20px">';
+  sorted.forEach((r,i)=>{
+    const weak=Object.entries(r.catStats||{}).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+    html+=`<div class="p-card">
+      <div class="p-row">
+        <span class="p-name">#${i+1} ${r.name}</span>
+        <span class="p-score" style="color:${r.pass?'var(--green)':'var(--red)'}">${r.score}/35</span>
+      </div>
+      <div class="p-meta">${r.branch} | ${r.pct}% <span class="pill ${r.pass?'pill-p':'pill-f'}" style="margin-left:6px">${r.pass?'✅ ผ่าน':'❌ ไม่ผ่าน'}</span></div>
+      ${weak.length?`<div style="font-size:11px;color:var(--red);margin-top:5px">⚠️ ต้องพัฒนา: ${weak.join(', ')}</div>`:''}
+      <div style="font-size:11px;color:var(--g400);margin-top:3px">${r.date}</div>
+    </div>`;
+  });
+  html+='</div>';
+  d.innerHTML=html;
+}
+
+function aTab(tab, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  ['at-overview','at-zone','at-questions','at-persons'].forEach(id=>{
+    document.getElementById(id).style.display=id===`at-${tab}`?'block':'none';
+  });
+}
+
+// ════════════════════════════════════════════
+//  ZONE IMAGE DOWNLOAD
+// ════════════════════════════════════════════
+function downloadZoneImg(zone, R){
+  const filtered=zone==='ทั้งหมด'?R:R.filter(r=>r.zone===zone);
+  if(!filtered.length){toast('ไม่มีข้อมูลในเขตนี้');return;}
+
+  const agg={};
+  filtered.forEach(r=>Object.entries(r.catStats||{}).forEach(([c,s])=>{
+    if(!agg[c]) agg[c]={total:0,correct:0};
+    agg[c].total+=s.total; agg[c].correct+=s.correct;
+  }));
+  const cats=Object.entries(agg);
+  const pass=filtered.filter(r=>r.pass).length;
+  const avg=Math.round(filtered.reduce((s,r)=>s+r.score,0)/filtered.length);
+  const passRate=Math.round(pass/filtered.length*100);
+  const weakCats=Object.entries(agg).filter(([,s])=>s.correct/s.total<0.6).map(([c])=>c);
+  const sorted=[...filtered].sort((a,b)=>b.score-a.score);
+
+  const W=800;
+  const H=160+80+cats.length*65+(weakCats.length?80:60)+sorted.length*56+60;
+  const canvas=document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+
+  // BG
+  ctx.fillStyle='#F1F5F9'; ctx.fillRect(0,0,W,H);
+
+  // Header
+  const grd=ctx.createLinearGradient(0,0,W,100);
+  grd.addColorStop(0,'#0f2568'); grd.addColorStop(1,'#1A3B9E');
+  ctx.fillStyle=grd; ctx.fillRect(0,0,W,100);
+  // Logo box (เหมือนหน้าล็อคอิน)
+  ctx.fillStyle='rgba(255,255,255,0.15)'; rr(ctx,28,10,168,76,14);
+  ctx.fillStyle='rgba(255,255,255,0.08)'; rr(ctx,30,12,164,72,12);
+  // "โมโต" — Kanit ไม่มีหัว
+  ctx.font='900 44px "Kanit",sans-serif';
+  ctx.fillStyle='#fff';
+  ctx.fillText('โมโต',42,62);
+  // "24" — สีส้ม
+  const mW=ctx.measureText('โมโต').width;
+  ctx.fillStyle='#E8631A';
+  ctx.fillText('24',42+mW,62);
+  // Sub text — จัดกลาง + เส้นขนาบ
+  ctx.font='700 11px "Kanit",sans-serif';
+  const subTxt='บริษัท โมโต24 จำกัด';
+  const boxCX=28+82; // center of logo box
+  const subW2=ctx.measureText(subTxt).width;
+  const lg=6, ll=Math.max(8,(164-subW2)/2-lg-2);
+  ctx.strokeStyle='rgba(255,255,255,0.38)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(boxCX-subW2/2-lg-ll,81);ctx.lineTo(boxCX-subW2/2-lg,81);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(boxCX+subW2/2+lg,81);ctx.lineTo(boxCX+subW2/2+lg+ll,81);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.82)';
+  ctx.textAlign='center'; ctx.fillText(subTxt,boxCX,83); ctx.textAlign='left';
+  // Zone title
+  ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font='700 17px "Kanit",sans-serif';
+  ctx.fillText(`บทวิเคราะห์ผลสอบ — ${zone==='ทั้งหมด'?'ภาพรวมทุกเขต':zone}`,210,52);
+  // Date
+  ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.font='13px "Sarabun",sans-serif';
+  const dt=new Date().toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  ctx.fillText(dt,210,74);
+
+  // Stats row
+  let y=116;
+  const sw=(W-40)/3;
+  const stats=[{l:'ผู้เข้าสอบ',v:filtered.length,col:'#1A3B9E'},{l:`ผ่าน ${passRate}%`,v:pass,col:'#16A34A'},{l:'คะแนนเฉลี่ย',v:`${avg}/35`,col:'#E8631A'}];
+  stats.forEach((s,i)=>{
+    const sx=20+i*sw;
+    ctx.fillStyle='#fff'; rr(ctx,sx,y,sw-8,60,10);
+    ctx.fillStyle=s.col; ctx.font='bold 28px sans-serif'; ctx.fillText(String(s.v),sx+14,y+36);
+    ctx.fillStyle='#64748B'; ctx.font='12px sans-serif'; ctx.fillText(s.l,sx+14,y+54);
+  });
+
+  // Categories
+  y+=74;
+  ctx.fillStyle='#334155'; ctx.font='bold 15px sans-serif'; ctx.fillText('📊 คะแนนแยกหมวดหมู่',20,y);
+  y+=18;
+  cats.forEach(([cat,s])=>{
+    const pct=Math.round(s.correct/s.total*100);
+    const col=CAT_COLOR[cat]||'#1A3B9E';
+    ctx.fillStyle='#fff'; rr(ctx,20,y,W-40,52,8);
+    ctx.fillStyle='#334155'; ctx.font='600 13px sans-serif'; ctx.fillText(cat,34,y+18);
+    ctx.fillStyle='#64748B'; ctx.font='12px sans-serif'; ctx.fillText(`${pct}% (${s.correct}/${s.total})`,W-130,y+18);
+    // bar bg
+    ctx.fillStyle='#E2E8F0'; rr(ctx,34,y+28,W-68,10,5);
+    // bar fill
+    ctx.fillStyle=col; rr(ctx,34,y+28,Math.max(10,(W-68)*pct/100),10,5);
+    y+=60;
+  });
+
+  // Analysis
+  y+=4;
+  if(weakCats.length){
+    ctx.fillStyle='#FEE2E2'; rr(ctx,20,y,W-40,68,10);
+    ctx.fillStyle='#DC2626'; ctx.fillRect(20,y,5,68);
+    ctx.fillStyle='#DC2626'; ctx.font='bold 13px sans-serif'; ctx.fillText('⚠️ หมวดที่ต้องพัฒนาด่วน (< 60%)',32,y+22);
+    ctx.fillStyle='#7F1D1D'; ctx.font='13px sans-serif'; ctx.fillText(weakCats.join(', '),32,y+48);
+    y+=76;
+  } else {
+    ctx.fillStyle='#DCFCE7'; rr(ctx,20,y,W-40,50,10);
+    ctx.fillStyle='#16A34A'; ctx.fillRect(20,y,5,50);
+    ctx.fillStyle='#166534'; ctx.font='bold 13px sans-serif'; ctx.fillText('✅ ผ่านทุกหมวดหมู่ — ผลลัพธ์ยอดเยี่ยม',32,y+30);
+    y+=58;
+  }
+
+  // Person list
+  y+=6;
+  ctx.fillStyle='#334155'; ctx.font='bold 15px sans-serif'; ctx.fillText('👤 รายชื่อและคะแนน',20,y);
+  y+=14;
+  sorted.forEach((r,i)=>{
+    ctx.fillStyle='#fff'; rr(ctx,20,y,W-40,44,8);
+    // rank
+    ctx.fillStyle=i<3?'#E8631A':'#94A3B8'; ctx.font='bold 13px sans-serif'; ctx.fillText(`#${i+1}`,32,y+27);
+    // name
+    ctx.fillStyle='#0F172A'; ctx.font='600 14px sans-serif'; ctx.fillText(r.name,60,y+20);
+    // branch
+    ctx.fillStyle='#64748B'; ctx.font='12px sans-serif'; ctx.fillText(r.branch,60,y+36);
+    // score
+    ctx.fillStyle=r.pass?'#16A34A':'#DC2626'; ctx.font='bold 18px sans-serif';
+    ctx.textAlign='right'; ctx.fillText(`${r.score}/35`,W-30,y+27); ctx.textAlign='left';
+    y+=50;
+  });
+
+  // Footer
+  ctx.fillStyle='#1A3B9E'; ctx.fillRect(0,y+10,W,50);
+  ctx.fillStyle='#fff'; ctx.font='13px sans-serif';
+  ctx.fillText('บริษัท โมโต24 จำกัด | ระบบข้อสอบช่างบริการ มิ.ย. 2569',30,y+40);
+
+  const link=document.createElement('a');
+  link.download=`moto24_${zone.replace(' ','_')}_report.png`;
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+  toast('💾 บันทึกภาพเรียบร้อย');
+}
+
+function rr(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();ctx.fill();
+}
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pad(n){return String(n).padStart(2,'0');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function emptyState(t,s){return `<div class="empty"><div class="empty-i">📭</div><div class="empty-t">${t}</div>${s?`<div style="font-size:13px;color:var(--g400);margin-top:4px">${s}</div>`:''}</div>`;}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+initSplash();
+</script>
+
+<!--
+════════════════════════════════════════════════════════
+  GOOGLE APPS SCRIPT SETUP (สำหรับแอดมิน)
+════════════════════════════════════════════════════════
+1. เปิด Google Sheets ใหม่ที่ sheets.google.com
+2. กด Extensions → Apps Script
+3. วางโค้ดด้านล่างนี้ แทนที่ทั้งหมด
+4. กด Deploy → New deployment → Web app
+   - Execute as: Me
+   - Who has access: Anyone
+5. Copy URL ที่ได้ → วางใน CFG.GAS_URL ด้านบน
+
+─── APPS SCRIPT CODE ───────────────────────────────────
+
+function doPost(e) {
+  try {
+    var raw = e.parameter.data || (e.postData && e.postData.contents) || '{}';
+    var data = JSON.parse(decodeURIComponent(raw));
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Results');
+    if (!sheet) {
+      sheet = ss.insertSheet('Results');
+      sheet.appendRow(['Timestamp','Name','Zone','Branch','Score','Total','Pct','Pass','Date','CatStats','WrongQIDs']);
+    }
+    var rows = sheet.getDataRange().getValues();
+    var found = -1;
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i][1] === data.name && rows[i][3] === data.branch) { found = i + 1; break; }
+    }
+    var row = [new Date().toISOString(), data.name, data.zone, data.branch,
+               data.score, data.total, data.pct, data.pass ? 'ผ่าน' : 'ไม่ผ่าน',
+               data.date, JSON.stringify(data.catStats), JSON.stringify(data.wrongQIDs || [])];
+    if (found > 0) sheet.getRange(found, 1, 1, row.length).setValues([row]);
+    else sheet.appendRow(row);
+    return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error:err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Results');
+    if (!sheet || sheet.getLastRow() <= 1) return ContentService.createTextOutput('[]').setMimeType(ContentService.MimeType.JSON);
+    var rows = sheet.getDataRange().getValues();
+    var out = [];
+    for (var i = 1; i < rows.length; i++) {
+      if (!rows[i][1]) continue;
+      out.push({ name:rows[i][1], zone:rows[i][2], branch:rows[i][3],
+        score:Number(rows[i][4]), total:Number(rows[i][5]), pct:Number(rows[i][6]),
+        pass:rows[i][7]==='ผ่าน', date:String(rows[i][8]),
+        catStats:JSON.parse(rows[i][9]||'{}'), wrongQIDs:JSON.parse(rows[i][10]||'[]') });
+    }
+    return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error:err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+────────────────────────────────────────────────────────
+-->
+</body>
+</html>
