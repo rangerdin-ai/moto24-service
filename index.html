@@ -86,6 +86,24 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .prog-wrap{background:rgba(255,255,255,.2);border-radius:99px;height:5px}
 .prog-fill{background:var(--orange);border-radius:99px;height:5px;transition:width .3s}
 
+/* QUESTION NAVIGATOR */
+.q-nav{display:flex;flex-wrap:wrap;gap:5px;padding:8px 0 6px}
+.qn-btn{width:30px;height:30px;border-radius:7px;border:none;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;flex-shrink:0;line-height:1}
+.qn-done{background:rgba(255,255,255,.35);color:#fff}
+.qn-curr{background:var(--orange);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.qn-empty{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.nav-btns{display:flex;gap:10px;padding:0 16px 24px}
+.btn-nav{flex:1;padding:13px;border-radius:10px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;transition:all .15s}
+.btn-nav-next{flex:2;background:var(--orange);border-color:var(--orange);color:#fff}
+.btn-nav:active,.btn-nav-next:active{transform:scale(.97)}
+.warn-dialog{background:#fff;border-radius:16px;margin:16px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.warn-title{font-size:17px;font-weight:800;color:var(--g900);margin-bottom:8px}
+.warn-sub{font-size:13px;color:var(--g600);margin-bottom:16px;line-height:1.6}
+.miss-btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.miss-btn{padding:8px 16px;border-radius:8px;background:#fff3e0;color:#b45309;border:2px solid var(--orange);font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .15s}
+.miss-btn:active{transform:scale(.96)}
+.warn-actions{display:flex;gap:10px}
+
 .q-card{background:#fff;border-radius:var(--r);margin:12px 16px;box-shadow:var(--shadow);overflow:hidden}
 .q-badge{background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:800;padding:8px 16px;border-bottom:2px solid #c7d2fe}
 .q-cat{font-size:11px;color:var(--orange);font-weight:700;padding:8px 16px 0}
@@ -202,7 +220,10 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 @media(prefers-color-scheme:dark){
   html,body{background:#0d1117;color:#e6edf3}
   .screen:not(#screen-splash){background:#0d1117}
-  .card,.p-card,.stat-c,.q-card{background:#161b22;color:#e6edf3}
+  .card,.p-card,.stat-c,.q-card,.warn-dialog{background:#161b22;color:#e6edf3}
+  .warn-title{color:#e6edf3}
+  .warn-sub{color:#8b949e}
+  .miss-btn{background:#2d1f00;color:#fb923c;border-color:#e8631a}
   .card-t{color:#cdd9e5;border-color:#2d333b}
   .fl{color:#cdd9e5}
   .fc{background:#1c2128;border-color:#373e47;color:#e6edf3}
@@ -317,6 +338,7 @@ select.fc{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
       </div>
       <div class="timer-chip" id="timer-chip">--:--</div>
     </div>
+    <div id="q-nav-wrap" class="q-nav"></div>
     <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
   </div>
   <div id="exam-body"></div>
@@ -593,14 +615,36 @@ function startExam(){
 // ════════════════════════════════════════════
 //  EXAM RENDER
 // ════════════════════════════════════════════
+function renderNav(){
+  const wrap=document.getElementById('q-nav-wrap');
+  if(!wrap) return;
+  wrap.innerHTML=S.shuffled.map((_,i)=>{
+    let cls='qn-empty';
+    if(i===S.cur) cls='qn-curr';
+    else if(S.ans[i]!==-1) cls='qn-done';
+    return `<button class="qn-btn ${cls}" onclick="goQ(${i})">${i+1}</button>`;
+  }).join('');
+}
+
+function goQ(i){
+  if(i<0||i>=S.shuffled.length) return;
+  S.cur=i;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
 function renderQ(){
   const q=S.shuffled[S.cur], tot=S.shuffled.length;
+  const answered=S.ans.filter(a=>a!==-1).length;
   document.getElementById('ex-qn').textContent=`ข้อที่ ${S.cur+1} / ${tot}`;
-  document.getElementById('prog').style.width=`${(S.cur/tot)*100}%`;
+  document.getElementById('prog').style.width=`${(answered/tot)*100}%`;
+  renderNav();
 
+  const isLast=S.cur===tot-1;
+  const hasAns=S.ans[S.cur]!==-1;
   document.getElementById('exam-body').innerHTML=`
     <div class="q-card">
-      <div class="q-badge">ข้อที่ ${S.cur+1} จาก ${tot} ข้อ</div>
+      <div class="q-badge" id="q-badge-txt">ข้อที่ ${S.cur+1} จาก ${tot} ข้อ · ตอบแล้ว ${answered}/${tot}</div>
       <div class="q-cat">${q.c}</div>
       <div class="q-text">${q.q}</div>
       <div class="opts">
@@ -611,10 +655,13 @@ function renderQ(){
           </button>`).join('')}
       </div>
     </div>
-    <div style="padding:0 16px 24px">
-      <button class="btn btn-orange" onclick="next()" ${S.ans[S.cur]===-1?'disabled':''} id="btn-next">
-        ${S.cur===tot-1?'📤 ส่งข้อสอบ':'ข้อถัดไป →'}
-      </button>
+    <div class="nav-btns">
+      ${S.cur>0
+        ?`<button class="btn-nav" onclick="goQ(${S.cur-1})">← ย้อนกลับ</button>`
+        :`<div style="flex:1"></div>`}
+      ${isLast
+        ?`<button class="btn-nav btn-nav-next" onclick="trySubmit()">📤 ส่งข้อสอบ</button>`
+        :`<button class="btn-nav btn-nav-next" id="btn-next-nav" onclick="goQ(${S.cur+1})">${hasAns?'ข้อถัดไป →':'ข้ามข้อนี้ →'}</button>`}
     </div>`;
 }
 
@@ -627,13 +674,38 @@ function pick(i){
     if(j===i) b.querySelector('.obadge').style.cssText='background:var(--orange);color:#fff';
     else b.querySelector('.obadge').style.cssText='';
   });
-  document.getElementById('btn-next').disabled=false;
+  // update nav grid dot and answered count
+  renderNav();
+  const tot=S.shuffled.length;
+  const answered=S.ans.filter(a=>a!==-1).length;
+  const badge=document.getElementById('q-badge-txt');
+  if(badge) badge.textContent=`ข้อที่ ${S.cur+1} จาก ${tot} ข้อ · ตอบแล้ว ${answered}/${tot}`;
+  document.getElementById('prog').style.width=`${(answered/tot)*100}%`;
+  const nb=document.getElementById('btn-next-nav');
+  if(nb) nb.textContent='ข้อถัดไป →';
+}
+
+function trySubmit(){
+  const unanswered=S.ans.map((a,i)=>a===-1?i:-1).filter(i=>i!==-1);
+  if(unanswered.length===0){doSubmit();return;}
+  document.getElementById('exam-body').innerHTML=`
+    <div class="warn-dialog">
+      <div class="warn-title">⚠️ ยังมีข้อที่ยังไม่ได้ตอบ</div>
+      <div class="warn-sub">คุณยังไม่ได้เลือกคำตอบอีก <b>${unanswered.length} ข้อ</b> ด้านล่างนี้<br>กรุณากลับไปตอบให้ครบ หรือกดส่งโดยยอมรับว่าข้อที่เหลือจะได้ 0 คะแนน</div>
+      <div class="miss-btns">
+        ${unanswered.map(i=>`<button class="miss-btn" onclick="goQ(${i})">ข้อที่ ${i+1}</button>`).join('')}
+      </div>
+      <div class="warn-actions">
+        <button class="btn" style="flex:2;background:var(--blue);color:#fff;border:none" onclick="goQ(${unanswered[0]})">← กลับไปตอบ</button>
+        <button class="btn" style="flex:1;background:#dc2626;color:#fff;border:none" onclick="doSubmit()">ส่งเลย</button>
+      </div>
+    </div>`;
+  window.scrollTo(0,0);
 }
 
 function next(){
-  if(S.ans[S.cur]===-1){toast('กรุณาเลือกคำตอบก่อน');return;}
   if(S.cur<S.shuffled.length-1){S.cur++;renderQ();window.scrollTo(0,0);}
-  else doSubmit();
+  else trySubmit();
 }
 
 // ════════════════════════════════════════════
